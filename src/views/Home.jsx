@@ -97,7 +97,7 @@ const Home = () => {
       <div className="absolute inset-0 z-10">
         <NavBar />
       </div>
-      <div className="flex pt-35 pb-10 px-4 z-40 w-full justify-center items-center flex-col">
+      <div className="flex pt-40 md:pt-10 pb-10 px-4 z-40 w-full justify-center items-center flex-col">
         <InstantlyFilterForm
           className={"w-11/12 md:w-[500px]"}
           existingSheets={existingSheets}
@@ -106,7 +106,6 @@ const Home = () => {
           encodingLoader={Boolean(encodingLoader)}
         />
       </div>
-
       {shouldShowLoader && (
         <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center">
           <LoaderProgress

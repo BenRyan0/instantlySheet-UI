@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import * as React from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,16 +12,19 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
-export function SheetsComboBox({ existingSheets,selectedSheet, setSelectedSheet }) {
-  const [open, setOpen] = React.useState(false)
-
+export function SheetsComboBox({
+  existingSheets,
+  selectedSheet,
+  setSelectedSheet,
+}) {
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -36,8 +39,14 @@ export function SheetsComboBox({ existingSheets,selectedSheet, setSelectedSheet 
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-  <PopoverContent side="bottom" align="end" sideOffset={4} className="w-full p-0" forceMount>
-        <Command >
+      <PopoverContent
+        side="bottom"
+        align="start"
+        sideOffset={4}
+        className="w-full p-0"
+        forceMount
+      >
+        <Command>
           <CommandInput placeholder="Search sheet..." className="h-9" />
           <CommandList>
             <CommandEmpty>No sheet found.</CommandEmpty>
@@ -47,8 +56,10 @@ export function SheetsComboBox({ existingSheets,selectedSheet, setSelectedSheet 
                   key={sheet}
                   value={sheet}
                   onSelect={(currentValue) => {
-                    setSelectedSheet(currentValue === selectedSheet ? "" : currentValue)
-                    setOpen(false)
+                    setSelectedSheet(
+                      currentValue === selectedSheet ? "" : currentValue
+                    );
+                    setOpen(false);
                   }}
                 >
                   {sheet}
@@ -65,5 +76,5 @@ export function SheetsComboBox({ existingSheets,selectedSheet, setSelectedSheet 
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

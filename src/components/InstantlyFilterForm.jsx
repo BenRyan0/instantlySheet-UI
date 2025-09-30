@@ -13,13 +13,15 @@ import { CampaignComboBox } from "./CampaignComboBox";
 import { SheetsComboBox } from "./SheetsComboBox";
 import { SheetsDrawerDialog } from "./SheetsDrawerDialog"; // adjust path if needed
 import { useEffect, useState } from "react";
-import StatusIndicator from "./custom/StatusIndicator";
 import { useDispatch } from "react-redux";
 import { startAgentEncoding } from "@/store/reducers/instantlyAiReducer";
 import toast from "react-hot-toast";
 import { FaChevronRight } from "react-icons/fa";
 import { FaChevronDown } from "react-icons/fa6";
 import { FaChevronUp } from "react-icons/fa";
+import { FaInfoCircle } from "react-icons/fa";
+import { Tooltip } from "react-tooltip";
+import { motion } from "framer-motion";
 
 export function InstantlyFilterForm({
   className,
@@ -50,7 +52,7 @@ export function InstantlyFilterForm({
 
   // Default opts values
   const defaultOpts = {
-    pageLimit: 100,
+    pageLimit: 10,
     emailsPerLead: 3,
     concurrency: 3,
     maxEmails: 100,
@@ -107,7 +109,7 @@ export function InstantlyFilterForm({
     >
       <Card className="w-full">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-black ">
+          <CardTitle className="text-2xl font-black">
             <div className="w-full relative flex justify-center items-end">
               <img className="w-9" src="images/logo.png" alt="" />
 
@@ -122,16 +124,16 @@ export function InstantlyFilterForm({
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
-            <div className="grid gap-6">
+            <div className="grid gap-4">
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-card text-muted-foreground relative z-10 px-2">
-                  Instantly to Google sheets
+                  Instantly.ai - Google Sheets
                 </span>
               </div>
 
               <div className="grid gap-6">
                 <div className="grid gap-3 relative">
-                  <Label htmlFor="">Campaign</Label>
+                  <Label htmlFor="">Campaign/s</Label>
                   <CampaignComboBox
                     existingCampaigns={existingCampaigns}
                     selectedIds={selectedIds}
@@ -142,7 +144,7 @@ export function InstantlyFilterForm({
                   />
                 </div>
                 <div className="grid gap-3 ">
-                  <Label htmlFor="">Google Sheets(Destination)</Label>
+                  <Label htmlFor="">Google Sheet(Destination)</Label>
                   <div className="flex justify-between gap-2">
                     <div className="w-full">
                       <SheetsComboBox
@@ -151,11 +153,11 @@ export function InstantlyFilterForm({
                         setSelectedSheet={setSelectedSheet}
                       />
                     </div>
-                    <SheetsDrawerDialog open={open} setOpen={setOpen} />
+                    <div className="relative">
+                      <SheetsDrawerDialog open={open} setOpen={setOpen} />
+                    </div>
                   </div>
                 </div>
-
-                {/* Toggle button for opts */}
                 <Button
                   type="button"
                   variant="outline"
@@ -165,29 +167,61 @@ export function InstantlyFilterForm({
                   {showOpts ? (
                     <div className="flex justify-center items-center gap-2">
                       <h2>Hide Advanced Options</h2>
-                      <FaChevronUp />
+                      <FaChevronUp size={20} />
                     </div>
                   ) : (
                     <div className="flex justify-center items-center gap-2">
                       <h2>Show Advanced Options</h2>
-                      <FaChevronDown />
+                      <FaChevronDown size={10} />
                     </div>
                   )}
                 </Button>
                 {showOpts && (
-                  <div className="grid grid-cols-2 gap-4 mb-2">
-                    <div className="flex flex-col gap-1.5">
-                      <Label htmlFor="pageLimit">Page Limit</Label>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 1, y: -30 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.5, y: 50 }}
+                    transition={{ duration: 0.5 }}
+                    className="grid grid-cols-2 md:grid-cols-2 justify-between items-end gap-4 mb-2 rounded-md p-5"
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, scale: 1, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.5, y: 50 }}
+                      transition={{ duration: 0.6 }}
+                      className="flex flex-col gap-1.5"
+                    >
+                      <Label htmlFor="pageLimit" className={"text-[12px]"}>
+                        Page Limit{" "}
+                        <FaInfoCircle
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content="Leads/Page"
+                          data-tooltip-place="right"
+                        />
+                      </Label>
                       <Input
                         id="pageLimit"
                         name="pageLimit"
                         type="number"
                         min="1"
-                        defaultValue={100}
+                        defaultValue={10}
                       />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <Label htmlFor="emailsPerLead">Emails Per Lead</Label>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 1, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.5, y: 50 }}
+                      transition={{ duration: 0.7 }}
+                      className="flex flex-col gap-1.5"
+                    >
+                      <Label htmlFor="emailsPerLead" className={"text-[12px]"}>
+                        Emails Per Lead{" "}
+                        <FaInfoCircle
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content="Emails/ID"
+                          data-tooltip-place="right"
+                        />
+                      </Label>
                       <Input
                         id="emailsPerLead"
                         name="emailsPerLead"
@@ -195,9 +229,22 @@ export function InstantlyFilterForm({
                         min="1"
                         defaultValue={3}
                       />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <Label htmlFor="concurrency">Concurrency</Label>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 1, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.5, y: 50 }}
+                      transition={{ duration: 0.8 }}
+                      className="flex flex-col gap-1.5"
+                    >
+                      <Label htmlFor="concurrency" className={"text-[12px]"}>
+                        Concurrency
+                        <FaInfoCircle
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content="Lead ID/Fetch"
+                          data-tooltip-place="right"
+                        />
+                      </Label>
                       <Input
                         id="concurrency"
                         name="concurrency"
@@ -205,30 +252,70 @@ export function InstantlyFilterForm({
                         min="1"
                         defaultValue={3}
                       />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <Label htmlFor="maxEmails">Max Emails</Label>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 1, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.5, y: 50 }}
+                      transition={{ duration: 0.9 }}
+                      className="flex flex-col gap-1.5"
+                    >
+                      <Label htmlFor="maxEmails" className={"text-[12px]"}>
+                        Max Emails
+                        <FaInfoCircle
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content="Total Emails to Get"
+                          data-tooltip-place="right"
+                        />
+                      </Label>
                       <Input
                         id="maxEmails"
                         name="maxEmails"
                         type="number"
                         min="1"
-                        defaultValue={100}
+                        defaultValue={200}
                       />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <Label htmlFor="maxPages">Max Pages</Label>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 1, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.5, y: 50 }}
+                      transition={{ duration: 0.9 }}
+                      className="flex flex-col gap-1.5"
+                    >
+                      <Label htmlFor="maxPages" className={"text-[12px]"}>
+                        Max Pages
+                        <FaInfoCircle
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content="Total pages to get"
+                          data-tooltip-place="right"
+                        />
+                      </Label>
                       <Input
                         id="maxPages"
                         name="maxPages"
                         type="number"
                         min="1"
-                        defaultValue={50}
+                        defaultValue={10}
                       />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <Label htmlFor="aiInterestThreshold">
-                        AI Interest Threshold
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 1, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.5, y: 50 }}
+                      transition={{ duration: 1 }}
+                      className="flex flex-col gap-1.5"
+                    >
+                      <Label
+                        htmlFor="aiInterestThreshold"
+                        className={"text-[12px]"}
+                      >
+                        Ai Interest Threshold
+                        <FaInfoCircle
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content="Ai threshold(instantly.ai)"
+                          data-tooltip-place="right"
+                        />
                       </Label>
                       <Input
                         id="aiInterestThreshold"
@@ -238,18 +325,15 @@ export function InstantlyFilterForm({
                         step="1"
                         defaultValue={1}
                       />
-                    </div>
-                  </div>
-                )}
-
+                    </motion.div>
+                  </motion.div>
+                )} 
                 <Button
                   type="submit"
-                  className="w-full text-base font-bold py-5 hover:cursor-pointer "
+                  className="w-full text-base font-bold py-5 hover:cursor-pointer"
                 >
-                  {/* {encodingLoader ? ( */}
                   {encodingLoader ? (
                     <div className="flex justify-center items-center gap-1">
-                      {/* Choose one: 'Processing Data...' or 'Encoding in Progress...' */}
                       Encoding in Progress...
                       <lord-icon
                         src="https://cdn.lordicon.com/aceczzap.json"
@@ -268,6 +352,7 @@ export function InstantlyFilterForm({
                     </div>
                   )}
                 </Button>
+                <Tooltip id="my-tooltip" />
               </div>
             </div>
           </form>
