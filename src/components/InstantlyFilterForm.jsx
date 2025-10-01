@@ -182,7 +182,7 @@ export function InstantlyFilterForm({
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.5, y: 50 }}
                     transition={{ duration: 0.5 }}
-                    className="grid grid-cols-2 md:grid-cols-2 justify-between items-end gap-4 mb-2 rounded-md p-5"
+                    className="grid grid-cols-2 md:grid-cols-3 justify-between items-end gap-4 mb-2 rounded-md p-5"
                   >
                     <motion.div
                       initial={{ opacity: 0, scale: 1, y: -10 }}
@@ -192,7 +192,7 @@ export function InstantlyFilterForm({
                       className="flex flex-col gap-1.5"
                     >
                       <Label htmlFor="pageLimit" className={"text-[12px]"}>
-                        Page Limit{" "}
+                        Page Limit
                         <FaInfoCircle
                           data-tooltip-id="my-tooltip"
                           data-tooltip-content="Leads/Page"
@@ -310,7 +310,7 @@ export function InstantlyFilterForm({
                         htmlFor="aiInterestThreshold"
                         className={"text-[12px]"}
                       >
-                        Ai Interest Threshold
+                        Ai Threshold
                         <FaInfoCircle
                           data-tooltip-id="my-tooltip"
                           data-tooltip-content="Ai threshold(instantly.ai)"

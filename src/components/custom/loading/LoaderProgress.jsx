@@ -24,7 +24,7 @@ const LoaderProgress = ({ progressArray, maxPage,maxEmailsCap }) => {
     },
 
     {
-      key: "isInterestedLLM",
+      key: "totalInterestedLLM",
       label: "LLM:INTERESTED",
       icon: <FaCode />,
     },

@@ -34,7 +34,6 @@ const LoaderTest = () => {
     <div className="w-full h-screen flex justify-center items-center">
       <div className="w-10/12">
       <LoaderProgress progressArray= {progressList}/>
-
       </div>
     </div>
   );
