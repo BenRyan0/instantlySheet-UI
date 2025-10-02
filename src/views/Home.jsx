@@ -4,19 +4,22 @@ import { NavBar } from "./../components/layout/NavBar";
 import { InstantlyFilterForm } from "../components/InstantlyFilterForm";
 import { getExistingSheets, messageClear } from "@/store/reducers/sheetReducer";
 import toast from "react-hot-toast";
-import { getExistingCampaigns } from "@/store/reducers/instantlyAiReducer";
+import {
+  getExistingCampaigns,
+  navigateToLogsClear,
+} from "@/store/reducers/instantlyAiReducer";
 import LoaderProgress from "./../components/custom/loading/LoaderProgress";
 import { socket } from "../utils/utils";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { existingSheets, successMessage, errorMessage } = useSelector(
     (state) => state.sheet
   );
-  const { existingCampaigns, instantlyloader, encodingLoader } = useSelector(
-    (state) => state.instantlyAi
-  );
-
+  const { existingCampaigns, instantlyloader, encodingLoader, navigateToLogs } =
+    useSelector((state) => state.instantlyAi);
   const [progressList, setProgressList] = useState([]);
   const [maxPage, setMaxPage] = useState(0);
   const [maxEmailsCap, setMaxEmailsCap] = useState(0);
@@ -48,19 +51,16 @@ const Home = () => {
 
     const handleProgress = (progress) => {
       console.log("New progress:", progress);
-
       // Add new progress to the array
       setProgressList((prevList) => [...prevList, progress]);
-
       // Whenever new progress comes in, force show the loader
       setForceShowLoader(true);
-
       // Reset inactivity timer
       if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
       inactivityTimer.current = setTimeout(() => {
         console.log("No new progress for threshold → closing loader");
         setForceShowLoader(false);
-      }, 60000); // ⏱ 10 seconds threshold
+      }, 60000); // 60 seconds threshold
     };
 
     socket.on("progress", handleProgress);
@@ -76,15 +76,14 @@ const Home = () => {
     console.log(progressList, "progressList");
   }, [progressList]);
 
-  // Grab maxPage + maxEmailsCap from first progress
   useEffect(() => {
     if (Array.isArray(progressList) && progressList.length > 0) {
-      setMaxPage(progressList[0].maxPagesCap);
-      setMaxEmailsCap(progressList[0].maxEmailsCap);
+      const lastItem = progressList[progressList.length - 1];
+      setMaxPage(lastItem.maxPagesCap);
+      setMaxEmailsCap(lastItem.maxEmailsCap);
     }
   }, [progressList]);
 
-  // Decide when loader should show
   const shouldShowLoader =
     encodingLoader ||
     forceShowLoader ||
@@ -92,9 +91,16 @@ const Home = () => {
       progressList.length > 0 &&
       progressList.every((item) => item.percentComplete === 100));
 
+  useEffect(() => {
+    if (navigateToLogs) {
+      navigateToLogsClear();
+      navigate("/logs"); // redirect to the logs Page
+    }
+  }, [navigateToLogs, navigate]);
+
   return (
     <div className="relative h-screen w-full p-0 flex justify-center items-center">
-      <div className="absolute inset-0 z-10">
+      <div className="absolute top-0 mx-auto container z-50">
         <NavBar />
       </div>
       <div className="flex pt-40 md:pt-10 pb-10 px-4 z-40 w-full justify-center items-center flex-col">

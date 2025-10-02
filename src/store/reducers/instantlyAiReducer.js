@@ -41,11 +41,16 @@ export const instantlyAiReducer = createSlice({
     successMessage: "",
     existingCampaigns: [],
     totalExistingCampaigns: 0,
+    navigateToLogs: false
   },
   reducers: {
     messageClear: (state, _) => {
       state.errorMessage = "";
       state.successMessage = "";
+    },
+    navigateToLogsClear: (state, _) => {
+      state.navigateToLogs = false;
+
     },
   },
 
@@ -74,11 +79,13 @@ export const instantlyAiReducer = createSlice({
     builder.addCase(startAgentEncoding.fulfilled, (state, payload) => {
       state.encodingLoader = false;
       state.successMessage = payload.payload.message;
+      state.navigateToLogs = true;
+
       // state.existingCampaigns = payload.payload.campaigns;
       // state.totalExistingCampaigns = payload.payload.total;
     });
   },
 });
 
-export const { messageClear } = instantlyAiReducer.actions;
+export const { messageClear, navigateToLogsClear } = instantlyAiReducer.actions;
 export default instantlyAiReducer.reducer;

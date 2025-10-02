@@ -40,8 +40,11 @@ export function NavBar() {
           <NavbarLogo />
           {/* <NavItems items={navItems} /> */}
           <div className="flex items-center gap-4">
-            <NavbarButton variant="secondary" className={"flex justify-center items-center gap-1.5"}>InstaSheet <FcDataSheet size={25} /></NavbarButton>
-            <NavbarButton variant="primary " className={"flex justify-center items-center gap-1.5"}>Schedule <FaClock size={20}/></NavbarButton>
+            {/* <NavbarButton variant="secondary" className={"flex justify-center items-center gap-1.5"}>InstaSheet <FcDataSheet size={25} /></NavbarButton> */}
+            <NavbarButton variant="primary " className={"flex justify-center items-center gap-1.5 p-1 px-3 "}> 
+              <a href="/logs" className="flex justify-center items-center gap-1">Logs
+              <img src="/gif/logs.gif" className="h-9 w-10" alt="" /> </a>
+              </NavbarButton>
           </div>
         </NavBody>
 

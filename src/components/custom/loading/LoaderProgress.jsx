@@ -7,6 +7,11 @@ import { FaCode } from "react-icons/fa";
 
 const LoaderProgress = ({ progressArray, maxPage,maxEmailsCap }) => {
   const fieldsToShow = [
+      {
+      key: "distinctLeadsChecked",
+      label: "Emails (redis)",
+      icon: <FaCode />,
+    },
     {
       key: "totalEmailsCollected",
       label: "Emails Collected",
@@ -79,8 +84,8 @@ const LoaderProgress = ({ progressArray, maxPage,maxEmailsCap }) => {
   }, [progressArray?.length]); // only run when length changes
 
   return (
-    <div className="p-4">
-      <div className="mx-auto grid w-full max-w-7xl grid-cols-2 md:grid-cols-3 lg:grid-cols-6 bg-white shadow-lg shadow-cyan-500">
+    <div className="shadow-lg shadow-cyan-500">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-2 md:grid-cols-3 lg:grid-cols-7 bg-white ">
         {fieldsToShow.map(({ key, label, icon }) => (
           <ProgressItem
             key={key}
@@ -93,7 +98,8 @@ const LoaderProgress = ({ progressArray, maxPage,maxEmailsCap }) => {
           />
         ))}
       </div>
-      <div className=" mx-auto w-full max-w-5xl">
+      <div className=" mx-auto w-full max-w-full">
+        {/* <Progress value={20} className="bg-slate-50" /> */}
         <Progress value={latest.percentComplete} className="bg-slate-50" />
       </div>
     </div>

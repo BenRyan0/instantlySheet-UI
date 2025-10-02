@@ -20,8 +20,13 @@ import { FaChevronRight } from "react-icons/fa";
 import { FaChevronDown } from "react-icons/fa6";
 import { FaChevronUp } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
-import { Tooltip } from "react-tooltip";
+// import { Tooltip } from "react-tooltip";
 import { motion } from "framer-motion";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function InstantlyFilterForm({
   className,
@@ -193,11 +198,19 @@ export function InstantlyFilterForm({
                     >
                       <Label htmlFor="pageLimit" className={"text-[12px]"}>
                         Page Limit
-                        <FaInfoCircle
-                          data-tooltip-id="my-tooltip"
-                          data-tooltip-content="Leads/Page"
-                          data-tooltip-place="right"
-                        />
+                        <Tooltip>
+                          <TooltipTrigger>
+                            {" "}
+                            <FaInfoCircle />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className={"bg-[#212121] text-white fill-[#212121]"}
+                          >
+                            <p className="text-[9px]">
+                              limit of pages to be fetched
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
                       </Label>
                       <Input
                         id="pageLimit"
@@ -216,11 +229,19 @@ export function InstantlyFilterForm({
                     >
                       <Label htmlFor="emailsPerLead" className={"text-[12px]"}>
                         Emails Per Lead{" "}
-                        <FaInfoCircle
-                          data-tooltip-id="my-tooltip"
-                          data-tooltip-content="Emails/ID"
-                          data-tooltip-place="right"
-                        />
+                        <Tooltip>
+                          <TooltipTrigger>
+                            {" "}
+                            <FaInfoCircle />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className={"bg-[#212121] text-white fill-[#212121]"}
+                          >
+                            <p className="text-[9px]">
+                              Number of emails to be collected for each lead
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
                       </Label>
                       <Input
                         id="emailsPerLead"
@@ -239,11 +260,19 @@ export function InstantlyFilterForm({
                     >
                       <Label htmlFor="concurrency" className={"text-[12px]"}>
                         Concurrency
-                        <FaInfoCircle
-                          data-tooltip-id="my-tooltip"
-                          data-tooltip-content="Lead ID/Fetch"
-                          data-tooltip-place="right"
-                        />
+                        <Tooltip>
+                          <TooltipTrigger>
+                            {" "}
+                            <FaInfoCircle />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className={"bg-[#212121] text-white fill-[#212121]"}
+                          >
+                            <p className="text-[9px]">
+                              Number of emails to be fetch for each request
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
                       </Label>
                       <Input
                         id="concurrency"
@@ -262,11 +291,19 @@ export function InstantlyFilterForm({
                     >
                       <Label htmlFor="maxEmails" className={"text-[12px]"}>
                         Max Emails
-                        <FaInfoCircle
-                          data-tooltip-id="my-tooltip"
-                          data-tooltip-content="Total Emails to Get"
-                          data-tooltip-place="right"
-                        />
+                        <Tooltip>
+                          <TooltipTrigger>
+                            {" "}
+                            <FaInfoCircle />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className={"bg-[#212121] text-white fill-[#212121]"}
+                          >
+                            <p className="text-[9px]">
+                              Maximum emails to be processed
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
                       </Label>
                       <Input
                         id="maxEmails"
@@ -285,11 +322,19 @@ export function InstantlyFilterForm({
                     >
                       <Label htmlFor="maxPages" className={"text-[12px]"}>
                         Max Pages
-                        <FaInfoCircle
-                          data-tooltip-id="my-tooltip"
-                          data-tooltip-content="Total pages to get"
-                          data-tooltip-place="right"
-                        />
+                        <Tooltip>
+                          <TooltipTrigger>
+                            {" "}
+                            <FaInfoCircle />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className={"bg-[#212121] text-white fill-[#212121]"}
+                          >
+                            <p className="text-[9px]">
+                              Maximum pages to be fetched
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
                       </Label>
                       <Input
                         id="maxPages"
@@ -311,11 +356,15 @@ export function InstantlyFilterForm({
                         className={"text-[12px]"}
                       >
                         Ai Threshold
-                        <FaInfoCircle
-                          data-tooltip-id="my-tooltip"
-                          data-tooltip-content="Ai threshold(instantly.ai)"
-                          data-tooltip-place="right"
-                        />
+                         <Tooltip>
+                          <TooltipTrigger>
+                            {" "}
+                            <FaInfoCircle />
+                          </TooltipTrigger>
+                          <TooltipContent className={"bg-[#212121] text-white fill-[#212121]"}>
+                            <p className="text-[9px]">Ai threshold filter(instantly.ai)</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </Label>
                       <Input
                         id="aiInterestThreshold"
@@ -327,7 +376,7 @@ export function InstantlyFilterForm({
                       />
                     </motion.div>
                   </motion.div>
-                )} 
+                )}
                 <Button
                   type="submit"
                   className="w-full text-base font-bold py-5 hover:cursor-pointer"

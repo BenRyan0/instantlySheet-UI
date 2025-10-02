@@ -178,12 +178,13 @@ export const MobileNavToggle = ({ isOpen, onClick }) => {
 export const NavbarLogo = () => {
   return (
     <a
-      href="#"
-      className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
+      href="/"
+      className="relative z-50 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
     >
   
-      <span className="bg-white p-1.5 rounded-sm hover:scale-110 hover:bg-transparent hover:text-white transition-all duration-400">
-        <MdHeadsetMic size={24} />
+      <span className="bg-white p-[2px] rounded-sm hover:-translate-y-1 hover:scale-105 hover:text-white transition-all duration-400">
+        {/* <MdHeadsetMic size={24} /> */}
+        <img src="/gif/headphones.gif" className="h-10 w-10 " alt="" />
       </span>
 
       <span className="text-black text-lg dark:text-white font-bold">
