@@ -39,12 +39,44 @@ export function NavBar() {
         <NavBody>
           <NavbarLogo />
           {/* <NavItems items={navItems} /> */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             {/* <NavbarButton variant="secondary" className={"flex justify-center items-center gap-1.5"}>InstaSheet <FcDataSheet size={25} /></NavbarButton> */}
-            <NavbarButton variant="primary " className={"flex justify-center items-center gap-1.5 p-1 px-3 "}> 
-              <a href="/logs" className="flex justify-center items-center gap-1">Logs
-              <img src="/gif/logs.gif" className="h-9 w-10" alt="" /> </a>
-              </NavbarButton>
+            <NavbarButton
+              variant="primary "
+              className={
+                "flex justify-center items-center gap-2 p-1 px-3 rounded-sm hover:bg-transparent hover:text-white group transition-all duration-600"
+              }
+            >
+              <a
+                href="/logs"
+                className="flex justify-center items-center gap-1"
+              >
+                Logs
+                <img
+                  src="/gif/logs.gif"
+                  className="h-9 w-10 bg-white rounded-sm group-hover:translate-x-0.5 transition-all duration-600"
+                  alt=""
+                />{" "}
+              </a>
+            </NavbarButton>
+            <NavbarButton
+              variant="primary "
+              className={
+                "flex justify-center items-center gap-2 p-1 px-3 rounded-sm hover:bg-transparent hover:text-white group transition-all duration-600"
+              }
+            >
+              <a
+                href="/dashboard"
+                className="flex justify-center items-center gap-1"
+              >
+                Statistics
+                <img
+                  src="/gif/wave-graph.gif"
+                  className="h-9 w-10 bg-white rounded-sm group-hover:translate-x-0.5 transition-all duration-600"
+                  alt=""
+                />{" "}
+              </a>
+            </NavbarButton>
           </div>
         </NavBody>
 
@@ -54,16 +86,21 @@ export function NavBar() {
             <NavbarLogo />
             <MobileNavToggle
               isOpen={isMobileMenuOpen}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
           </MobileNavHeader>
 
-          <MobileNavMenu isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)}>
+          <MobileNavMenu
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+          >
             {navItems.map((item, idx) => (
               <a
                 key={`mobile-link-${idx}`}
                 href={item.link}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="relative text-neutral-600 dark:text-neutral-300">
+                className="relative text-neutral-600 dark:text-neutral-300"
+              >
                 <span className="block">{item.name}</span>
               </a>
             ))}
@@ -71,13 +108,15 @@ export function NavBar() {
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
-                className="w-full">
+                className="w-full"
+              >
                 Login
               </NavbarButton>
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
-                className="w-full">
+                className="w-full"
+              >
                 Book a call
               </NavbarButton>
             </div>

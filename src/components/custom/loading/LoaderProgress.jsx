@@ -3,11 +3,12 @@
 import { useAnimate } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Progress } from "@/components/ui/progress";
+import { ProgressImage } from "@/components/ui/ProgressImage";
 import { FaCode } from "react-icons/fa";
 
-const LoaderProgress = ({ progressArray, maxPage,maxEmailsCap }) => {
+const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
   const fieldsToShow = [
-      {
+    {
       key: "distinctLeadsChecked",
       label: "Emails (redis)",
       icon: <FaCode />,
@@ -84,38 +85,67 @@ const LoaderProgress = ({ progressArray, maxPage,maxEmailsCap }) => {
   }, [progressArray?.length]); // only run when length changes
 
   return (
-    <div className="shadow-lg shadow-cyan-500">
-      <div className="mx-auto grid w-full max-w-7xl grid-cols-2 md:grid-cols-3 lg:grid-cols-7 bg-white ">
-        {fieldsToShow.map(({ key, label, icon }) => (
-          <ProgressItem
-            key={key}
-            label={label}
-            value={latest[key]}
-            version={version}
-            icon={icon}
-            maxPage={maxPage}
-            maxEmailsCap={maxEmailsCap}
+    <div className="relative">
+      <div className="shadow-lg shadow-green-700/60 bg-white rounded-md">
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-2 md:grid-cols-3 lg:grid-cols-7 bg-transparent">
+          {fieldsToShow.map(({ key, label, icon }) => (
+            <ProgressItem
+              key={key}
+              label={label}
+              value={latest[key]}
+              version={version}
+              icon={icon}
+              maxPage={maxPage}
+              maxEmailsCap={maxEmailsCap}
+            />
+          ))}
+        </div>
+        <div className=" mx-auto w-full max-w-full pb-2 px-2 flex justify-center">
+          {/* <Progress value={20} className="bg-slate-50" /> */}
+           {/* <ProgressImage
+            // value={40}
+            value={latest.percentComplete}
+            className="border-b-2 border-gray-300 rounded-none w-12/12 mx-1"
+          /> */}
+          <Progress
+            value={latest.percentComplete}
+            className="bg-gray-400/60 rounded-2xl mx-4"
           />
-        ))}
+        </div>
       </div>
-      <div className=" mx-auto w-full max-w-full">
-        {/* <Progress value={20} className="bg-slate-50" /> */}
-        <Progress value={latest.percentComplete} className="bg-slate-50" />
+      <div className="absolute top-0 inset-x-0 flex justify-center">
+      
+        {/* <ProgressImage
+            value={40}
+            // value={latest.percentComplete}
+            className="w-12/12 mx-1"
+          /> */}
+        {/* <Progress
+            value={latest.percentComplete}
+            className="bg-gray-400/60 rounded-2xl w-12/12 mx-1"
+          /> */}
       </div>
     </div>
   );
 };
 
-const ProgressItem = ({ label, value, version, icon,  maxPage,maxEmailsCap }) => {
+const ProgressItem = ({
+  label,
+  value,
+  version,
+  icon,
+  maxPage,
+  maxEmailsCap,
+}) => {
   const { ref, animatedValue } = useAnimatedValue(value, version);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-1 border-r border-slate-200 font-mono md:h-27 md:gap-2 ">
+    <div className="flex flex-col items-center justify-center gap-1 border-r border-none font-mono md:h-27 md:gap-2 ">
       <div className="relative w-full overflow-hidden text-center MatrixFont  ">
         <div className="flex justify-center items-center gap-1">
           <span
             ref={ref}
-            className="block text-lg font-medium text-cyan-500/60 md:text-3xl lg:text-4xl xl:text-5xl"
+            className="block text-lg font-medium text-green-700/60 md:text-3xl lg:text-4xl xl:text-5xl"
           >
             {String(animatedValue)}
             {label === "Pages Fetched" ? `/${maxPage}` : ""}

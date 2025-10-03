@@ -179,15 +179,15 @@ export const NavbarLogo = () => {
   return (
     <a
       href="/"
-      className="relative z-50 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
+      className="relative z-50 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black group "
     >
   
-      <span className="bg-white p-[2px] rounded-sm hover:-translate-y-1 hover:scale-105 hover:text-white transition-all duration-400">
+      <span className="bg-white p-[2px] rounded-sm group-hover:-translate-y-2 hover:text-white transition-all duration-400 ease-in-out">
         {/* <MdHeadsetMic size={24} /> */}
         <img src="/gif/headphones.gif" className="h-10 w-10 " alt="" />
       </span>
 
-      <span className="text-black text-lg dark:text-white font-bold">
+      <span className="text-black text-lg dark:text-white font-bold group-hover:-translate-y-2 transition-all duration-500 ease-in-out">
         LHPI
       </span>
     </a>

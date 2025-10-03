@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllLogs } from "@/store/reducers/logsReducer";
 
 const Logs = () => {
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const {logs } = useSelector(
     (state) => state.logs
   );

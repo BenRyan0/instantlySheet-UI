@@ -60,7 +60,7 @@ const Home = () => {
       inactivityTimer.current = setTimeout(() => {
         console.log("No new progress for threshold → closing loader");
         setForceShowLoader(false);
-      }, 60000); // 60 seconds threshold
+      }, 6000); // 60 seconds threshold
     };
 
     socket.on("progress", handleProgress);
@@ -91,12 +91,16 @@ const Home = () => {
       progressList.length > 0 &&
       progressList.every((item) => item.percentComplete === 100));
 
-  useEffect(() => {
-    if (navigateToLogs) {
-      navigateToLogsClear();
-      navigate("/logs"); // redirect to the logs Page
-    }
-  }, [navigateToLogs, navigate]);
+useEffect(() => {
+  if (navigateToLogs) {
+    navigateToLogsClear();
+    window.open("/logs", "_blank"); // opens logs in a new tab/window
+  }
+}, [navigateToLogs]);
+
+
+
+  const shouldShowLoader1 = true
 
   return (
     <div className="relative h-screen w-full p-0 flex justify-center items-center">
@@ -112,6 +116,15 @@ const Home = () => {
           encodingLoader={Boolean(encodingLoader)}
         />
       </div>
+      {/* {shouldShowLoader1 && (
+        <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center">
+          <LoaderProgress
+            progressArray={progressList}
+            maxPage={maxPage}
+            maxEmailsCap={maxEmailsCap}
+          />
+        </div>
+      )} */}
       {shouldShowLoader && (
         <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center">
           <LoaderProgress

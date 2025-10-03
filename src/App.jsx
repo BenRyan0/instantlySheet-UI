@@ -5,6 +5,7 @@ import Home from "./views/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoaderTest from "./views/LoaderTest";
 import Logs from "./views/Logs";
+import Charts from "./views/Charts";
 
 
 
@@ -17,6 +18,7 @@ function App() {
          <Route path='/' element = {<Home/>}/> 
          <Route path='/loader' element = {<LoaderTest/>}/> 
          <Route path='/logs' element = {<Logs/>}/> 
+         <Route path='/dashboard' element = {<Charts/>}/> 
       </Routes>
     </BrowserRouter>
     // <div className="w-full h-screen">
