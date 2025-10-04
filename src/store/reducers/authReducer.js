@@ -1,44 +1,23 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api/api";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // ✅ correct named import
 
+export const userLogout = createAsyncThunk(
+  "auth/userLogout",
+  async (_,{ rejectWithValue, fulfillWithValue,getState }) => {
+  const { token } = getState().auth;
+    const config = {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    };
+ 
+    try {
+         const { data } = await api.get('/auth/user-logout', config)
+         localStorage.removeItem("accessToken");
 
-export const trader_register = createAsyncThunk(
-  "auth/trader_register",
-  async (info, {fulfillWithValue, rejectWithValue}) => {
-    try {
-      const { data } = await api.post("/trader/trader-register", info);
-      console.log(data);
-      localStorage.setItem('traderToken', data.token)
-      return fulfillWithValue(data);
-    } catch (error) {
-      return rejectWithValue(error.response.data)
-    }
-  }
-);
-export const trader_login = createAsyncThunk(
-  "auth/trader_login",
-  async (info, {fulfillWithValue, rejectWithValue}) => {
-    try {
-      const { data } = await api.post("/trader/trader-login", info);
-      console.log("----------------------------- >")
-      console.log(data);
-      localStorage.setItem('traderToken', data.token)
-      return fulfillWithValue(data);
-    } catch (error) {
-      return rejectWithValue(error.response.data)
-    }
-  }
-);
+         console.log("LOGOUT ---------------------")
 
-// Async thunk for trader change password
-export const trader_changePassword = createAsyncThunk(
-  "auth/trader_changePassword",
-  async (info, { fulfillWithValue, rejectWithValue }) => {
-    try {
-      const { data } = await api.post("/trader/change-password", info);
-      // Clearing the token after password change to force a re-login
-      localStorage.removeItem("traderToken");
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -47,7 +26,49 @@ export const trader_changePassword = createAsyncThunk(
 );
 
 
-const decodedToken = (token) =>{
+
+export const ChangeUserPassWord = createAsyncThunk(
+  "auth/ChangeUserPassword",
+  async ({ Credential }, { fulfillWithValue, rejectWithValue, getState}) => {
+    const { token } = getState().auth;
+    const config = {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    };
+ 
+    try {
+      const { data } = await api.post("/auth/change-user-password", Credential, config);
+      console.log("Change Password ----------------------");
+      console.log(data);
+
+      localStorage.setItem("accessToken", data.token);
+
+      return fulfillWithValue(data);
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+export const login = createAsyncThunk(
+  "auth/login",
+  async ({ Credential }, { fulfillWithValue, rejectWithValue }) => {
+    try {
+      const { data } = await api.post("/auth/login", Credential);
+      console.log(data)
+
+      localStorage.setItem("accessToken", data.token);
+
+      return fulfillWithValue(data);
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+const decodedToken = (token) => {
   if (!token) {
     return ""; // No token, return an empty role
   }
@@ -57,7 +78,7 @@ const decodedToken = (token) =>{
     const expireTime = new Date(userinfo.exp * 1000);
 
     if (new Date() > expireTime) {
-      localStorage.removeItem("traderToken");
+      localStorage.removeItem("accessToken");
       return ""; // Token expired, clear the role
     } else {
       return userinfo;
@@ -66,89 +87,101 @@ const decodedToken = (token) =>{
     console.error("Error decoding token:", error);
     return ""; // If decoding fails, return an empty role
   }
-}
+};
+
+// export const get_user_info = createAsyncThunk(
+//   "auth/get_user_info",
+//   async (_, { rejectWithValue, fulfillWithValue, getState }) => {
+//     const { token } = getState().auth;
+//     const config = {
+//       headers: {
+//         authorization: `Bearer ${token}`,
+//       },
+//     };
+
+//     console.log(config);
+//     // const token = localStorage.getItem("accessToken");
+//     if (token === "undefined") {
+//       return rejectWithValue("No token found. Please log in.");
+//     }
+//     try {
+//       const { data } = await api.get(`/auth/get-user`, config);
+//       // const { data } = await axios.get("/get-user", config);
+//       return fulfillWithValue(data);
+//     } catch (error) {
+//       return rejectWithValue(error.response?.data || "Unknown error");
+//     }
+//   }
+// );
 
 export const authReducer = createSlice({
   name: "auth",
   initialState: {
     loader: false,
-    userInfo:decodedToken(localStorage.getItem('traderToken')),
     errorMessage: "",
     successMessage: "",
-    redirect: 0,
-    token: localStorage.getItem("traderToken")
+    userInfo: decodedToken(localStorage.getItem("accessToken")),
+    token: localStorage.getItem("accessToken"),
   },
   reducers: {
-    messageClear: (state, _) => {
+    messageClear: (state) => {
       state.errorMessage = "";
       state.successMessage = "";
     },
-    redirectClear: (state, _) => {
+    redirectClear: (state) => {
       state.redirect = 0;
       // state.successMessage = "";
     },
-    user_reset: (state, _) => {
-      state.userInfo = ""
-   }
+    user_reset: (state) => {
+      state.userInfo = "";
+    },
   },
 
-
   extraReducers: (builder) => {
-    builder.addCase(trader_register.pending, (state,_) => {
-      state.loader= true;
-      });
-    builder.addCase(trader_register.rejected, (state, payload) => {
-      state.loader= false;
-      state.errorMessage = payload.payload.error;
-     
-      });
-    builder.addCase(trader_register.fulfilled, (state, payload) => {
-        const user = decodedToken(payload.payload.token)
-        state.loader= false;
-        state.successMessage = payload.payload.message;
-        state.userInfo = user
-        
-      }); 
+    builder.addCase(login.pending, (state) => {
+      state.loader = true;
+    });
+    builder.addCase(login.fulfilled, (state, action) => {
+      const user = decodedToken(action.payload.token);
+      state.loader = false;
+      state.successMessage = action.payload.message;
+      state.userInfo = user;
+      state.token = action.payload.token; // ✅ update token in Redux
+    });
+    builder.addCase(login.rejected, (state, action) => {
+      state.loader = false;
+      state.errorMessage = action.payload.error;
+      // console.log("Login failed:", action.payload.error);
+    });
 
-    builder.addCase(trader_login.pending, (state,_) => {
-      state.loader= true;
-      });
-    builder.addCase(trader_login.rejected, (state, payload) => {
-      state.loader= false;
-      state.errorMessage = payload.payload.error;
-      state.redirect = payload.payload.redirect;
-     
-      });
-    builder.addCase(trader_login.fulfilled, (state, payload) => {
-      const user = decodedToken(payload.payload.token)
-      console.log("TOKEN___________")
-      console.log(user)
-      state.loader= false;
-        state.successMessage = payload.payload.message;
-        state.redirect = payload.payload.redirect;
-        state.userInfo = user;
-        state.token = payload.payload.token;
-      });
+    // builder.addCase(get_user_info.pending, (state) => {
+    //   state.loader = true;
+    // });
+    // builder.addCase(get_user_info.rejected, (state, action) => {
+    //   state.loader = false;
+    //   state.errorMessage = action.payload || "Failed to fetch user info";
+    // });
+    // builder.addCase(get_user_info.fulfilled, (state, action) => {
+    //   state.loader = false;
+    //   state.userInfo = action.payload.userInfo;
+
+    // });
 
 
-      builder.addCase(trader_changePassword.pending, (state,_) => {
-        state.loader= true;
-        });
+    builder.addCase(userLogout.pending, (state) => {
+      state.loader = true;
+    });
+    builder.addCase(userLogout.rejected, (state, action) => {
+      state.loader = false;
+      state.errorMessage = action.payload || "Failed to fetch user info";
+    });
+    builder.addCase(userLogout.fulfilled, (state) => {
+      state.loader = false;
+      state.userInfo = ""
 
-      builder.addCase(trader_changePassword.rejected, (state,payload) => {
-        state.loader= false;
-        state.errorMessage = payload.payload.error;
-        });
-
-      builder.addCase(trader_changePassword.fulfilled, (state,payload) => {
-        state.loader= false
-        state.successMessage = payload.payload.message;
-   
-        });
-   
-},
-  //   extraReducers: {},
+    });
+  },
 });
 
-export const { messageClear,redirectClear,user_reset } = authReducer.actions;
+export const { messageClear, redirectClear, user_reset } = authReducer.actions;
 export default authReducer.reducer;

@@ -10,34 +10,13 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
-import {
-  AlertTriangleIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  CopyIcon,
-  ShareIcon,
-  TrashIcon,
-  UserRoundXIcon,
-  VolumeOffIcon,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { useState } from "react";
 import { FaClock } from "react-icons/fa";
 import { FcDataSheet } from "react-icons/fc";
 import { useSelector } from "react-redux";
-import { FaRegUserCircle } from "react-icons/fa";
-import { SlGraph } from "react-icons/sl";
-import { TbBrandDatabricks } from "react-icons/tb";
+
+
+
 
 export function NavBar() {
   const navItems = [
@@ -55,8 +34,8 @@ export function NavBar() {
     },
   ];
 
-  const { userInfo } = useSelector((state) => state.auth);
-  console.log(userInfo);
+  const {userInfo} = useSelector((state)=>state.auth)
+console.log(userInfo)
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -66,38 +45,46 @@ export function NavBar() {
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
-          <div className="">
-            {/* <div className="flex justify-center items-center gap-1">
-              <span className="text-sm font-bold">{userInfo?.username}</span>
-              <FaRegUserCircle size={24}/>
-            </div> */}
-            <ButtonGroup>
-              {/* <div className="h-full">asd</div> */}
-              <Button variant="outline" className="w-[110px]">
-                <span className="text-sm font-bold">{userInfo?.username}</span>
-                <FaRegUserCircle size={24} />
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="!pl-2">
-                    <ChevronDownIcon />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="[--radius:1rem]">
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                      <TbBrandDatabricks />
-                      <a href="/logs">Encoding logs</a>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <SlGraph />
-                      <a href="/dashboard">Data Trend</a>
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </ButtonGroup>
-          </div>
+          {/* <NavItems items={navItems} /> */}
+          {/* <div className="flex items-center gap-2">
+            {/* <NavbarButton variant="secondary" className={"flex justify-center items-center gap-1.5"}>InstaSheet <FcDataSheet size={25} /></NavbarButton> */}
+            <NavbarButton
+              variant="primary "
+              className={
+                "flex justify-center items-center gap-2 p-1 px-3 rounded-sm hover:bg-transparent hover:text-white group transition-all duration-600"
+              }
+            >
+              <a
+                href="/logs"
+                className="flex justify-center items-center gap-1"
+              >
+                Logs
+                <img
+                  src="/gif/logs.gif"
+                  className="h-9 w-10 bg-white rounded-sm group-hover:translate-x-0.5 transition-all duration-600"
+                  alt=""
+                />{" "}
+              </a>
+            </NavbarButton>
+            <NavbarButton
+              variant="primary "
+              className={
+                "flex justify-center items-center gap-2 p-1 px-3 rounded-sm hover:bg-transparent hover:text-white group transition-all duration-600"
+              }
+            >
+              <a
+                href="/dashboard"
+                className="flex justify-center items-center gap-1"
+              >
+                Statistics
+                <img
+                  src="/gif/wave-graph.gif"
+                  className="h-9 w-10 bg-white rounded-sm group-hover:translate-x-0.5 transition-all duration-600"
+                  alt=""
+                />{" "}
+              </a>
+            </NavbarButton>
+          </div> */}
         </NavBody>
 
         {/* Mobile Navigation */}
