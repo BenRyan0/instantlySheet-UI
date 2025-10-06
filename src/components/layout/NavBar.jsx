@@ -34,10 +34,14 @@ import {
 import { useState } from "react";
 import { FaClock } from "react-icons/fa";
 import { FcDataSheet } from "react-icons/fc";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaRegUserCircle } from "react-icons/fa";
 import { SlGraph } from "react-icons/sl";
 import { TbBrandDatabricks } from "react-icons/tb";
+import { IoMdExit } from "react-icons/io";
+import { VscServerProcess } from "react-icons/vsc";
+import { RiRobot2Fill } from "react-icons/ri";
+import { userLogout } from "@/store/reducers/authReducer";
 
 export function NavBar() {
   const navItems = [
@@ -59,6 +63,9 @@ export function NavBar() {
   console.log(userInfo);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const dispatch= useDispatch()
+
+  
 
   return (
     <div className="relative w-full pt-4">
@@ -72,7 +79,6 @@ export function NavBar() {
               <FaRegUserCircle size={24}/>
             </div> */}
             <ButtonGroup>
-              {/* <div className="h-full">asd</div> */}
               <Button variant="outline" className="w-[110px]">
                 <span className="text-sm font-bold">{userInfo?.username}</span>
                 <FaRegUserCircle size={24} />
@@ -86,12 +92,23 @@ export function NavBar() {
                 <DropdownMenuContent align="end" className="[--radius:1rem]">
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
+                     <RiRobot2Fill />
+                      <a href="/">Agent</a>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
                       <TbBrandDatabricks />
                       <a href="/logs">Encoding logs</a>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <SlGraph />
                       <a href="/dashboard">Data Trend</a>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <IoMdExit />
+                      <button onClick={()=>dispatch(userLogout())}>Log out</button>
+                      {/* <a href="/dashboard">Log out</a> */}
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
@@ -100,7 +117,6 @@ export function NavBar() {
           </div>
         </NavBody>
 
-        {/* Mobile Navigation */}
         <MobileNav>
           <MobileNavHeader>
             <NavbarLogo />
@@ -143,7 +159,7 @@ export function NavBar() {
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
-      <DummyContent />
+      {/* <DummyContent /> */}
       {/* Navbar */}
     </div>
   );

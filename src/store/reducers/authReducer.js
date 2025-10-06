@@ -1,22 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api/api";
-import { jwtDecode } from "jwt-decode"; // ✅ correct named import
+import { jwtDecode } from "jwt-decode";
 
 export const userLogout = createAsyncThunk(
   "auth/userLogout",
-  async (_,{ rejectWithValue, fulfillWithValue,getState }) => {
-  const { token } = getState().auth;
+  async (_, { rejectWithValue, fulfillWithValue, getState }) => {
+    const { token } = getState().auth;
     const config = {
       headers: {
         authorization: `Bearer ${token}`,
       },
     };
- 
     try {
-         const { data } = await api.get('/auth/user-logout', config)
-         localStorage.removeItem("accessToken");
-
-         console.log("LOGOUT ---------------------")
+      const { data } = await api.get("/auth/signout", config);
+      localStorage.removeItem("accessToken");
 
       return fulfillWithValue(data);
     } catch (error) {
@@ -25,38 +22,36 @@ export const userLogout = createAsyncThunk(
   }
 );
 
+// export const ChangeUserPassWord = createAsyncThunk(
+//   "auth/ChangeUserPassword",
+//   async ({ Credential }, { fulfillWithValue, rejectWithValue, getState}) => {
+//     const { token } = getState().auth;
+//     const config = {
+//       headers: {
+//         authorization: `Bearer ${token}`,
+//       },
+//     };
 
+//     try {
+//       const { data } = await api.post("/auth/change-user-password", Credential, config);
+//       console.log("Change Password ----------------------");
+//       console.log(data);
 
-export const ChangeUserPassWord = createAsyncThunk(
-  "auth/ChangeUserPassword",
-  async ({ Credential }, { fulfillWithValue, rejectWithValue, getState}) => {
-    const { token } = getState().auth;
-    const config = {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    };
- 
-    try {
-      const { data } = await api.post("/auth/change-user-password", Credential, config);
-      console.log("Change Password ----------------------");
-      console.log(data);
+//       localStorage.setItem("accessToken", data.token);
 
-      localStorage.setItem("accessToken", data.token);
-
-      return fulfillWithValue(data);
-    } catch (err) {
-      console.log(err);
-      return rejectWithValue(err.response.data);
-    }
-  }
-);
+//       return fulfillWithValue(data);
+//     } catch (err) {
+//       console.log(err);
+//       return rejectWithValue(err.response.data);
+//     }
+//   }
+// );
 export const login = createAsyncThunk(
   "auth/login",
   async ({ Credential }, { fulfillWithValue, rejectWithValue }) => {
     try {
       const { data } = await api.post("/auth/login", Credential);
-      console.log(data)
+      console.log(data);
 
       localStorage.setItem("accessToken", data.token);
 
@@ -167,7 +162,6 @@ export const authReducer = createSlice({
 
     // });
 
-
     builder.addCase(userLogout.pending, (state) => {
       state.loader = true;
     });
@@ -177,8 +171,7 @@ export const authReducer = createSlice({
     });
     builder.addCase(userLogout.fulfilled, (state) => {
       state.loader = false;
-      state.userInfo = ""
-
+      state.userInfo = "";
     });
   },
 });

@@ -198,13 +198,13 @@ export function InstantlyFilterForm({
                     >
                       <Label htmlFor="pageLimit" className={"text-[12px]"}>
                         Page Limit
-                        <Tooltip>
-                          <TooltipTrigger>
+                        <Tooltip >
+                          <TooltipTrigger >
                             {" "}
                             <FaInfoCircle />
                           </TooltipTrigger>
                           <TooltipContent
-                            className={"bg-[#212121] text-white fill-[#212121]"}
+                            className={"bg-[#212121] text-white fill-[#212121] "}
                           >
                             <p className="text-[9px]">
                               limit of pages to be fetched

@@ -76,14 +76,15 @@ export function LoginForm({
          <form onSubmit={handleLogin}>
             <div className="flex flex-col gap-6 text-slate-100">
               <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Username or Email</Label>
                 <Input
                   id="email"
                   type="email"
                   value={email}
+                  className="text-sm"
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="m@example.com"
+                  placeholder="username123 or m@example.com"
                 />
               </div>
               <div className="grid gap-3">

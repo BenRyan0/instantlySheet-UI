@@ -46,7 +46,7 @@ console.log(userInfo)
         <NavBody>
           <NavbarLogo />
           {/* <NavItems items={navItems} /> */}
-          {/* <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             {/* <NavbarButton variant="secondary" className={"flex justify-center items-center gap-1.5"}>InstaSheet <FcDataSheet size={25} /></NavbarButton> */}
             <NavbarButton
               variant="primary "
@@ -84,7 +84,7 @@ console.log(userInfo)
                 />{" "}
               </a>
             </NavbarButton>
-          </div> */}
+          </div>
         </NavBody>
 
         {/* Mobile Navigation */}

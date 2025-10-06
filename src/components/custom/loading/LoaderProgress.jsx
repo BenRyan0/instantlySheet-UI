@@ -5,8 +5,16 @@ import { useEffect, useRef, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { ProgressImage } from "@/components/ui/ProgressImage";
 import { FaCode } from "react-icons/fa";
+import { FaPowerOff } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { messageClear, stopEncoding } from "@/store/reducers/instantlyAiReducer";
 
 const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
+  const dispatch= useDispatch()
+    const { successMessage, errorMessage } =
+    useSelector((state) => state.instantlyAi);
   const fieldsToShow = [
     {
       key: "distinctLeadsChecked",
@@ -66,10 +74,6 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
     },
   ];
 
-  console.log(maxPage);
-  console.log("maxPage");
-  console.log(maxEmailsCap);
-  console.log("maxEmailsCap");
   // Use the latest progress OR fallback to zeros
   const latest =
     progressArray && progressArray.length > 0
@@ -83,6 +87,21 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
       setVersion((v) => v + 1);
     }
   }, [progressArray?.length]); // only run when length changes
+
+
+
+
+
+    // Messages
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+    } else if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage, errorMessage, dispatch]);
 
   return (
     <div className="relative">
@@ -102,7 +121,7 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
         </div>
         <div className=" mx-auto w-full max-w-full pb-2 px-2 flex justify-center">
           {/* <Progress value={20} className="bg-slate-50" /> */}
-           {/* <ProgressImage
+          {/* <ProgressImage
             // value={40}
             value={latest.percentComplete}
             className="border-b-2 border-gray-300 rounded-none w-12/12 mx-1"
@@ -113,8 +132,12 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
           />
         </div>
       </div>
-      <div className="absolute top-0 inset-x-0 flex justify-center">
-      
+      <div className="absolute -top-10 inset-x-0 flex justify-end items-end text-green-900 font-bold">
+        <Button onClick={()=>dispatch(stopEncoding())} className="flex justify-center items-center gap-1.5 bg-white px-3 py-1 rounded-sm">
+          <FaPowerOff />
+          <span>Stop</span>
+        </Button>
+
         {/* <ProgressImage
             value={40}
             // value={latest.percentComplete}

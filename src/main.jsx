@@ -16,6 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         style: {
           background: "white",
           color: "black",
+          margin: "10px 160px"
         },
       }}
     />
