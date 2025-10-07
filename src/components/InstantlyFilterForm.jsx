@@ -58,11 +58,12 @@ export function InstantlyFilterForm({
   // Default opts values
   const defaultOpts = {
     pageLimit: 10,
-    emailsPerLead: 3,
+    emailsPerLead: 1,
     concurrency: 3,
     maxEmails: 100,
     maxPages: 50,
     aiInterestThreshold: 1,
+    delayMs : 300
   };
 
   const handleSubmit = (e) => {
@@ -96,6 +97,9 @@ export function InstantlyFilterForm({
       maxPages: Number(form.maxPages?.value || defaultOpts.maxPages),
       aiInterestThreshold: Number(
         form.aiInterestThreshold?.value || defaultOpts.aiInterestThreshold
+      ),
+      delayMs: Number(
+        form.delayMs?.value || defaultOpts.delayMs
       ),
     };
     const data = {
@@ -131,7 +135,7 @@ export function InstantlyFilterForm({
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4">
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                <span className="bg-card text-muted-foreground relative z-10 px-2">
+                <span className="bg-card text-muted-foreground relative z-10 px-2 text-xs">
                   Instantly.ai - Google Sheets
                 </span>
               </div>
@@ -198,13 +202,15 @@ export function InstantlyFilterForm({
                     >
                       <Label htmlFor="pageLimit" className={"text-[12px]"}>
                         Page Limit
-                        <Tooltip >
-                          <TooltipTrigger >
+                        <Tooltip>
+                          <TooltipTrigger>
                             {" "}
                             <FaInfoCircle />
                           </TooltipTrigger>
                           <TooltipContent
-                            className={"bg-[#212121] text-white fill-[#212121] "}
+                            className={
+                              "bg-[#212121] text-white fill-[#212121] "
+                            }
                           >
                             <p className="text-[9px]">
                               limit of pages to be fetched
@@ -248,10 +254,10 @@ export function InstantlyFilterForm({
                         name="emailsPerLead"
                         type="number"
                         min="1"
-                        defaultValue={3}
+                        defaultValue={1}
                       />
                     </motion.div>
-                    <motion.div
+                    {/* <motion.div
                       initial={{ opacity: 0, scale: 1, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       exit={{ opacity: 0, scale: 0.5, y: 50 }}
@@ -281,7 +287,7 @@ export function InstantlyFilterForm({
                         min="1"
                         defaultValue={3}
                       />
-                    </motion.div>
+                    </motion.div> */}
                     <motion.div
                       initial={{ opacity: 0, scale: 1, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -356,13 +362,17 @@ export function InstantlyFilterForm({
                         className={"text-[12px]"}
                       >
                         Ai Threshold
-                         <Tooltip>
+                        <Tooltip>
                           <TooltipTrigger>
                             {" "}
                             <FaInfoCircle />
                           </TooltipTrigger>
-                          <TooltipContent className={"bg-[#212121] text-white fill-[#212121]"}>
-                            <p className="text-[9px]">Ai threshold filter(instantly.ai)</p>
+                          <TooltipContent
+                            className={"bg-[#212121] text-white fill-[#212121]"}
+                          >
+                            <p className="text-[9px]">
+                              Ai threshold filter(instantly.ai)
+                            </p>
                           </TooltipContent>
                         </Tooltip>
                       </Label>
@@ -373,6 +383,41 @@ export function InstantlyFilterForm({
                         min="0"
                         step="1"
                         defaultValue={1}
+                      />
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 1, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.5, y: 50 }}
+                      transition={{ duration: 1 }}
+                      className="flex flex-col gap-1.5"
+                    >
+                      <Label
+                        htmlFor="delayMs"
+                        className={"text-[12px]"}
+                      >
+                        delayMs
+                        <Tooltip>
+                          <TooltipTrigger>
+                            {" "}
+                            <FaInfoCircle />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className={"bg-[#212121] text-white fill-[#212121]"}
+                          >
+                            <p className="text-[9px]">
+                              Delay per Request (instantly.ai 20 requests/min)
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </Label>
+                      <Input
+                        id="delayMs"
+                        name="delayMs"
+                        type="number"
+                        min="0"
+                        step="100"
+                        defaultValue={300}
                       />
                     </motion.div>
                   </motion.div>

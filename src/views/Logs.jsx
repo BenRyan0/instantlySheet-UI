@@ -26,13 +26,10 @@ const Logs = () => {
           asd
         </button>
       </div> */}
-      <div className="z-40 w-9/12 relative h-screen flex justify-center items-center ">
-        <div className="absolute top-35 pb-20 ">
+      <div className="z-40 w-11/12 md:w-9/12 relative h-screen flex justify-center items-center ">
+        <div className="absolute top-35 pb-20 w-full">
           <LogsList data={logs} />
         </div>
-
-
-        
       </div>
     </div>
   );

@@ -26,12 +26,13 @@ export const getExistingCampaigns = createAsyncThunk(
 
 export const startAgentEncoding = createAsyncThunk(
   "auth/startAgentEncoding",
-  async ({ campaignId, opts, sheetName }, { fulfillWithValue, rejectWithValue }) => {
+  async ({ campaignId, opts, sheetName, delayMs }, { fulfillWithValue, rejectWithValue }) => {
     try {
       const { data } = await api.post(`/agent/start-agent-encoding`, {
         campaignId,
         opts,
         sheetName,
+        delayMs
       });
       return fulfillWithValue(data);
     } catch (error) {
