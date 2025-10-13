@@ -121,10 +121,25 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
           ))}
         </div>
         <div className=" mx-auto w-full max-w-full pb-2 px-2 flex justify-center items-end">
+          {/* <Progress value={20} className="bg-slate-50" /> */}
+          {/* <ProgressImage
+            // value={40}
+            value={latest.percentComplete}
+            className="border-b-2 border-gray-300 rounded-none w-12/12 mx-1"
+          /> */}
           <Progress
             value={latest.percentComplete}
             className="bg-gray-400/60 rounded-2xl mx-4"
           />
+          {/* <h1 className="text-red-500 bg-red-600">
+            <Button
+              onClick={() => dispatch(stopEncoding())}
+              className="flex justify-center items-center gap-1.5 bg-white hover:bg-slate-100 px-3 py-1 rounded-sm"
+            >
+              <FaStop color="#F75757" />
+              <span>Stop</span>
+            </Button>
+          </h1> */}
         </div>
       </div>
       <div className="absolute -top-7 inset-x-0 flex justify-end items-end text-xs group ">
@@ -135,6 +150,16 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
           <FaStop />
           <span className="text-slate-600">Stop</span>
         </button>
+
+        {/* <ProgressImage
+            value={40}
+            // value={latest.percentComplete}
+            className="w-12/12 mx-1"
+          /> */}
+        {/* <Progress
+            value={latest.percentComplete}
+            className="bg-gray-400/60 rounded-2xl w-12/12 mx-1"
+          /> */}
       </div>
     </div>
   );

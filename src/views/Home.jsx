@@ -11,6 +11,7 @@ import {
 import LoaderProgress from "./../components/custom/loading/LoaderProgress";
 import { socket } from "../utils/utils";
 import { useNavigate } from "react-router-dom";
+import { EncodingConfirmationForm } from './../components/EncodingConfirmationForm';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -101,6 +102,37 @@ useEffect(() => {
 
 
   const shouldShowLoader1 = true
+  const shouldShowEncondingReq = true
+
+
+  const toBeEncoded =  {
+  'Column 1': 'InstaSheet-agent1',
+  'For scheduling': '',
+  'sales person': 'Jessica Flores',
+  'sales person email': 'jessica@grouphealthbrightcare.com',
+  company: 'ABRAHAM BALDERAS CONSTRUCTION LLC',
+  'company phone#': '(509) 737-4613',
+  'phone#from email': 'none',
+  'lead first name': 'Abraham',
+  'lead last name': 'Balderas',
+  'lead email': 'abebalderas@gmail.com',
+  'Column 2': 'abebalderas@gmail.com',
+  'email reply': 'Thanks for reaching out I could use funding',
+  'phone 1': '(509) 737-4613',
+  '#': '(509) 737-4613',
+  phone2: '',
+  address: '',
+  city: '',
+  state: '',
+  zip: '',
+  details: 'https://balderas-construction-llc-bdy6j.zensmb.com/',
+  'Email Signature': 'Thanks for reaching out I could use funding',
+  'linkedin link': 'none',
+  '2nd contact person linked': 'none',
+  'status after the call': '',
+  'number of calls spoken with the leads ': '',
+  '@dropdown': ''
+}
 
   return (
     <div className="relative h-screen w-full p-0 flex justify-center items-center">
@@ -116,7 +148,25 @@ useEffect(() => {
           encodingLoader={Boolean(encodingLoader)}
         />
       </div>
-      {/* {shouldShowLoader1 && (
+
+      {shouldShowEncondingReq && (
+        <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center overflow-y-scroll pt-[100px] pb-10 ">
+        <EncodingConfirmationForm RowData={toBeEncoded}/>
+        </div>
+      )}
+      {shouldShowLoader1 && (
+        <div className="absolute bg-black/80 inset-0 z-40 flex justify-center items-center">
+          <LoaderProgress
+            progressArray={progressList}
+            maxPage={maxPage}
+            maxEmailsCap={maxEmailsCap}
+          />
+        </div>
+      )}
+
+
+
+      {/* {shouldShowLoader && (
         <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center">
           <LoaderProgress
             progressArray={progressList}
@@ -125,15 +175,6 @@ useEffect(() => {
           />
         </div>
       )} */}
-      {shouldShowLoader && (
-        <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center">
-          <LoaderProgress
-            progressArray={progressList}
-            maxPage={maxPage}
-            maxEmailsCap={maxEmailsCap}
-          />
-        </div>
-      )}
     </div>
   );
 };
