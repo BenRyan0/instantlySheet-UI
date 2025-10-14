@@ -9,6 +9,7 @@ import Charts from "./views/Charts";
 import Main from "./components/layout/Main";
 import Login from "./views/Login";
 import ProtectUser from "./utils/ProtectUser";
+import ToEncodeList from "./views/ToEncodeList";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,6 +27,7 @@ function App() {
           <Route path="/loader" element={<LoaderTest />} />
           <Route path="/logs" element={<Logs />} />
           <Route path="/dashboard" element={<Charts />} />
+          <Route path="/to-encode" element={<ToEncodeList />} />
         </Route>
       </Routes>
       {/* <Routes>

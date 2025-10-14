@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -74,8 +74,8 @@ export const description = "An interactive area chart";
 // ];
 
 const chartConfig = {
-  processed_leads: {
-    label: "Processed Leads",
+  distinct_leads_checked: {
+    label: "Distinct Leads Checked",
     color: "var(--chart-1)",
   },
   total_encoded: {
@@ -88,10 +88,15 @@ const chartConfig = {
   },
 };
 
-export function ChartAreaInteractive({chartData}) {
+export function ChartAreaInteractive({ chartData }) {
   const [timeRange, setTimeRange] = React.useState("90d");
 
-  const filteredData = chartData; // You can still filter by time if needed
+  // ✅ Sort ascending so newest date is at the right
+  const filteredData = React.useMemo(() => {
+    return [...chartData].sort(
+      (a, b) => new Date(a.created_at) - new Date(b.created_at)
+    );
+  }, [chartData]);
 
   return (
     <Card className="pt-0">
@@ -119,6 +124,7 @@ export function ChartAreaInteractive({chartData}) {
             <SelectItem value="7d" className="rounded-lg">
               Last 7 days
             </SelectItem>
+
           </SelectContent>
         </Select>
       </CardHeader>
@@ -129,7 +135,13 @@ export function ChartAreaInteractive({chartData}) {
         >
           <AreaChart data={filteredData}>
             <defs>
-              <linearGradient id="fillProcessedLeads" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient
+                id="fillProcessedLeads"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
                 <stop
                   offset="5%"
                   stopColor="var(--chart-1)"
@@ -153,7 +165,13 @@ export function ChartAreaInteractive({chartData}) {
                   stopOpacity={0.1}
                 />
               </linearGradient>
-              <linearGradient id="fillInterestedLeads" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient
+                id="fillInterestedLeads"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
                 <stop
                   offset="5%"
                   stopColor="var(--chart-3)"
@@ -175,12 +193,16 @@ export function ChartAreaInteractive({chartData}) {
               minTickGap={32}
               tickFormatter={(value) => {
                 const date = new Date(value);
-                return date.toLocaleDateString("en-US", {
+                return date.toLocaleString("en-US", {
                   month: "short",
                   day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
                 });
               }}
             />
+            <YAxis hide domain={[0, (dataMax) => dataMax * 1.1]} />
             <ChartTooltip
               cursor={false}
               content={
@@ -196,7 +218,7 @@ export function ChartAreaInteractive({chartData}) {
               }
             />
             <Area
-              dataKey="processed_leads"
+              dataKey="distinct_leads_checked"
               type="natural"
               fill="url(#fillProcessedLeads)"
               stroke="var(--chart-1)"

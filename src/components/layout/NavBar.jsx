@@ -41,6 +41,9 @@ import { TbBrandDatabricks } from "react-icons/tb";
 import { IoMdExit } from "react-icons/io";
 import { VscServerProcess } from "react-icons/vsc";
 import { RiRobot2Fill } from "react-icons/ri";
+import { RiListCheck2 } from "react-icons/ri";
+import { FaListAlt } from "react-icons/fa";
+
 import { userLogout } from "@/store/reducers/authReducer";
 
 export function NavBar() {
@@ -92,6 +95,11 @@ export function NavBar() {
                     <DropdownMenuItem>
                       <RiRobot2Fill />
                       <a href="/">Agent</a>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <FaListAlt />
+                      <a href="/to-encode">To Encode</a>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
@@ -156,5 +164,3 @@ export function NavBar() {
     </div>
   );
 }
-
-

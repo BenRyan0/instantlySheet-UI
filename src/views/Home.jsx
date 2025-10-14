@@ -149,12 +149,12 @@ useEffect(() => {
         />
       </div>
 
-      {shouldShowEncondingReq && (
+      {/* {shouldShowEncondingReq && (
         <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center overflow-y-scroll pt-[100px] pb-10 ">
         <EncodingConfirmationForm RowData={toBeEncoded}/>
         </div>
-      )}
-      {shouldShowLoader1 && (
+      )} */}
+      {/* {shouldShowLoader1 && (
         <div className="absolute bg-black/80 inset-0 z-40 flex justify-center items-center">
           <LoaderProgress
             progressArray={progressList}
@@ -162,11 +162,11 @@ useEffect(() => {
             maxEmailsCap={maxEmailsCap}
           />
         </div>
-      )}
+      )} */}
 
 
 
-      {/* {shouldShowLoader && (
+      {shouldShowLoader && (
         <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center">
           <LoaderProgress
             progressArray={progressList}
@@ -174,7 +174,7 @@ useEffect(() => {
             maxEmailsCap={maxEmailsCap}
           />
         </div>
-      )} */}
+      )}
     </div>
   );
 };
