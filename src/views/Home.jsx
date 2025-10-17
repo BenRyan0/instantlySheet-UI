@@ -61,7 +61,7 @@ const Home = () => {
       inactivityTimer.current = setTimeout(() => {
         console.log("No new progress for threshold → closing loader");
         setForceShowLoader(false);
-      }, 6000); // 60 seconds threshold
+      }, 60000); // 60 seconds <threshold></threshold>
     };
 
     socket.on("progress", handleProgress);
@@ -105,34 +105,7 @@ useEffect(() => {
   const shouldShowEncondingReq = true
 
 
-  const toBeEncoded =  {
-  'Column 1': 'InstaSheet-agent1',
-  'For scheduling': '',
-  'sales person': 'Jessica Flores',
-  'sales person email': 'jessica@grouphealthbrightcare.com',
-  company: 'ABRAHAM BALDERAS CONSTRUCTION LLC',
-  'company phone#': '(509) 737-4613',
-  'phone#from email': 'none',
-  'lead first name': 'Abraham',
-  'lead last name': 'Balderas',
-  'lead email': 'abebalderas@gmail.com',
-  'Column 2': 'abebalderas@gmail.com',
-  'email reply': 'Thanks for reaching out I could use funding',
-  'phone 1': '(509) 737-4613',
-  '#': '(509) 737-4613',
-  phone2: '',
-  address: '',
-  city: '',
-  state: '',
-  zip: '',
-  details: 'https://balderas-construction-llc-bdy6j.zensmb.com/',
-  'Email Signature': 'Thanks for reaching out I could use funding',
-  'linkedin link': 'none',
-  '2nd contact person linked': 'none',
-  'status after the call': '',
-  'number of calls spoken with the leads ': '',
-  '@dropdown': ''
-}
+
 
   return (
     <div className="relative h-screen w-full p-0 flex justify-center items-center">

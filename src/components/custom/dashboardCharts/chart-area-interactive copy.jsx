@@ -86,14 +86,6 @@ const chartConfig = {
     label: "Interested Leads",
     color: "var(--chart-3)",
   },
-  total_tobe_encoded: {
-    label: "To be encoded Leads",
-    color: "var(--chart-3)",
-  },
-  total_tobe_approved: {
-    label: "Total to be approved leads",
-    color: "var(--chart-4)",
-  },
 };
 
 export function ChartAreaInteractive({ chartData }) {
@@ -106,7 +98,10 @@ export function ChartAreaInteractive({ chartData }) {
     );
   }, [chartData]);
 
- 
+  const leadsApproved = [
+    { id: 1, approval_date: "2025-10-16", approval_count: 55 },
+    { id: 6, approval_date: "2025-10-15", approval_count: 6 },
+  ];
 
   return (
     <Card className="pt-0">
@@ -243,12 +238,6 @@ export function ChartAreaInteractive({ chartData }) {
               type="natural"
               fill="url(#fillInterestedLeads)"
               stroke="var(--chart-3)"
-            />
-             <Area
-              dataKey="total_tobe_approved"
-              type="natural"
-              fill="url(#fillProcessedLeads)"
-              stroke="var(--chart-4)"
             />
             <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
