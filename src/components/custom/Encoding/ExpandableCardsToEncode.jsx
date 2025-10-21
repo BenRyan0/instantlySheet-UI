@@ -40,18 +40,6 @@ export function ExpandableCardsToEncode({ cards, onEncode, onDeny, loader }) {
 
     return `${formattedDate} – ${timeAgo}`;
   };
-  //   const stripTimestamp(rawValue) => {
-  //   if (!rawValue || typeof rawValue !== "string") return null;
-
-  //   // Remove curly braces and trim whitespace
-  //   const cleaned = rawValue.replace(/[{}]/g, "").trim();
-
-  //   // Optional: validate if it’s a valid date
-  //   const date = new Date(cleaned);
-  //   if (isNaN(date)) return null; // invalid date
-
-  //   return cleaned;
-  // }
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -132,7 +120,7 @@ export function ExpandableCardsToEncode({ cards, onEncode, onDeny, loader }) {
                     </motion.p>
                     <motion.p
                       layoutId={`description-${active.company_phone}-${id}`}
-                      className="text-neutral-600 dark:text-neutral-400 mt-2"
+                      className="text-neutral-600 dark:text-neutral-400 mt-3 border-t py-1 "
                     >
                       <span className="font-semibold">Company phone: </span>
                       {active.company_phone}
@@ -144,21 +132,30 @@ export function ExpandableCardsToEncode({ cards, onEncode, onDeny, loader }) {
                       <span className="font-semibold">Address: </span>
                       {active.address}
                     </motion.p>
-                    <motion.p
+                    <motion.div
                       layoutId={`description-${active.address}${active.lead_email}-${id}`}
-                      className="text-neutral-600 dark:text-neutral-400 "
+                      className="text-neutral-600 dark:text-neutral-400 border-y mt-2 py-2"
                     >
-                      <span className="font-semibold">{active.city}</span>
-                      <span className="font-semibold">{active.state}</span>
-                      <span className="font-semibold">{active.zip}</span>
-                    </motion.p>
+                      <h2>
+                        <span className="font-semibold">City: </span>
+                        <span className="font-semibold">{active.city}</span>
+                      </h2>
+                      <h2>
+                        <span className="font-semibold">State: </span>
+                        <span className="font-semibold">{active.state}</span>
+                      </h2>
+                      <h2>
+                        <span className="font-semibold">Zip: </span>
+                        <span className="font-semibold">{active.zip}</span>
+                      </h2>
+                    </motion.div>
                     <div className="pt-4 relative">
                       <motion.div
                         layout
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-2 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+                        className="text-neutral-600 text-xs md:text-sm lg:text-base h-50 md:h-fit pb-2 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                       >
                         <div className="flex flex-col gap-1 pb-10">
                           <span className="font-bold">Email Reply: </span>

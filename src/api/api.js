@@ -1,6 +1,6 @@
 import axios from "axios";
-const local = "http://localhost:3000";
-const production1 = "http://localhost:3000";
+const local = "http://localhost:8184";
+const production1 = "http://localhost:8184";
 
 let api_url = ''
 let mode = 'pro'
