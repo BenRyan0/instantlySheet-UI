@@ -1,13 +1,14 @@
 import axios from "axios";
+
 const local = "http://localhost:9000";
 // const local = "http://localhost:8184";
-const production1 = "http://localhost:8184";
+const production1 = import.meta.env.VITE_PROD_API;
 
 let api_url = ''
-let mode = 'dev'
+let mode = import.meta.env.VITE_MODE;
 
 
-if(mode === 'pro'){
+if(mode === 'prod'){
   api_url = production1
 }else{
   api_url = local 
