@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { NavBar } from "./../components/layout/NavBar";
-import { LogsList } from "./../components/custom/logs/LogsList";
+import { LogsList } from "../components/custom/logs/LogsList";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllLogs } from "@/store/reducers/logsReducer";
 // import toast from "react-hot-toast";
