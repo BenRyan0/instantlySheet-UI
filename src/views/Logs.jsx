@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { NavBar } from "../components/layout/NavBar";
-import { LogsListTable } from "../components/custom/logs/LogsList.jsx";
+import { LogsListTable } from "../components/custom/logsPage/LogsList";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllLogs } from "@/store/reducers/logsReducer";
 
