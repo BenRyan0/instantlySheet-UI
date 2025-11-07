@@ -20,6 +20,7 @@ import { FaChevronRight } from "react-icons/fa";
 import { FaChevronDown } from "react-icons/fa6";
 import { FaChevronUp } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
+import { Checkbox } from "@/components/ui/checkbox"
 // import { Tooltip } from "react-tooltip";
 import { motion } from "framer-motion";
 import {
@@ -31,14 +32,21 @@ import {
 export function InstantlyFilterForm({
   className,
   existingSheets,
-  existingCampaigns,
+  // existingCampaigns,
   instantlyloader,
   encodingLoader,
+  clientId,
+  setProgressList,
   ...props
 }) {
   const [open, setOpen] = useState(false);
-  const [selectedIds, setSelectedIds] = useState([]);
+  // const [selectedIds, setSelectedIds] = useState([]);
+
+  const [autoAppend, setAutoAppend] = useState(true)
+  const [descriptionExtraction, setDescriptionExtraction] = useState(true)
   const [selectedSheet, setSelectedSheet] = useState("");
+  const [selectedSheetPartership, setSelectedSheetPartership] = useState("");
+  const [selectedSheetSBA, setSelectedSheetSBA] = useState("");
   const [loader, setLoader] = useState(true);
   const [openCampaign, setOpenCampaign] = useState(false);
   const [showOpts, setShowOpts] = useState(false);
@@ -57,32 +65,49 @@ export function InstantlyFilterForm({
 
   // Default opts values
   const defaultOpts = {
-    pageLimit: 10,
+    pageLimit: 2,
     emailsPerLead: 1,
     concurrency: 3,
-    maxEmails: 100,
-    maxPages: 50,
+    maxEmails: 10,
+    maxPages: 2,
     aiInterestThreshold: 1,
-    delayMs : 300
+    delayMs: 300,
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Validation
-    if (
-      !selectedIds ||
-      !Array.isArray(selectedIds) ||
-      selectedIds.length === 0
-    ) {
-      toast.error("Please select at least one campaign.");
-      return;
-    }
+    
     if (
       !selectedSheet ||
       typeof selectedSheet !== "string" ||
       selectedSheet.trim() === ""
     ) {
       toast.error("Please select a Google Sheet destination.");
+      return;
+    }
+    if (
+      !selectedSheetPartership ||
+      typeof selectedSheetPartership !== "string" ||
+      selectedSheetPartership.trim() === ""
+    ) {
+      toast.error("Please select a Google Sheet destination for Partership.");
+      return;
+    }
+    if (
+      !selectedSheetSBA ||
+      typeof selectedSheetSBA !== "string" ||
+      selectedSheetSBA.trim() === ""
+    ) {
+      toast.error("Please select a Google Sheet destination for SBA.");
+      return;
+    }
+    if (
+      !clientId ||
+      typeof clientId !== "string" ||
+     clientId.trim() === ""
+    ) {
+      toast.error("No Client ID, please reload the webpage");
       return;
     }
 
@@ -98,15 +123,20 @@ export function InstantlyFilterForm({
       aiInterestThreshold: Number(
         form.aiInterestThreshold?.value || defaultOpts.aiInterestThreshold
       ),
-      delayMs: Number(
-        form.delayMs?.value || defaultOpts.delayMs
-      ),
+      delayMs: Number(form.delayMs?.value || defaultOpts.delayMs),
     };
     const data = {
-      campaignId: selectedIds,
       sheetName: selectedSheet,
+      sheetNameForPartnership: selectedSheetPartership,
+      sheetNameForSBA: selectedSheetSBA,
       opts,
+      autoAppend: autoAppend,
+      descriptionExtraction : descriptionExtraction,
+      clientId
     };
+    console.log("---------------  data --------------- ")
+    console.log(data)
+  
     dispatch(startAgentEncoding(data));
     // You can replace the above with any further handling (API call, etc)
   };
@@ -141,30 +171,39 @@ export function InstantlyFilterForm({
               </div>
 
               <div className="grid gap-6">
-                <div className="grid gap-3 relative">
-                  <Label htmlFor="">Campaign/s</Label>
-                  <CampaignComboBox
-                    existingCampaigns={existingCampaigns}
-                    selectedIds={selectedIds}
-                    setSelectedIds={setSelectedIds}
-                    instantlyloader={instantlyloader}
-                    openCampaign={openCampaign}
-                    setOpenCampaign={setOpenCampaign}
-                  />
-                </div>
                 <div className="grid gap-3 ">
-                  <Label htmlFor="">Google Sheet(Destination)</Label>
                   <div className="flex justify-between gap-2">
-                    <div className="w-full">
+                    <div className="w-full flex flex-col gap-2">
+                      <Label htmlFor="">Interested(Offer)</Label>
                       <SheetsComboBox
                         existingSheets={existingSheets}
                         selectedSheet={selectedSheet}
                         setSelectedSheet={setSelectedSheet}
                       />
                     </div>
-                    <div className="relative">
+                    <div className="w-full flex flex-col gap-2">
+                      <Label htmlFor="">Sheet(Partnership)</Label>
+                      <SheetsComboBox
+                        existingSheets={existingSheets}
+                        selectedSheet={selectedSheetPartership}
+                        setSelectedSheet={setSelectedSheetPartership}
+                      />
+                    </div>
+                  
+                  </div>
+                  <div className="flex justify-between gap-2">
+                     <div className="w-full flex flex-col gap-2">
+                      <Label htmlFor="">Sheet(SBA)</Label>
+                      <SheetsComboBox
+                        existingSheets={existingSheets}
+                        selectedSheet={selectedSheetSBA}
+                        setSelectedSheet={setSelectedSheetSBA}
+                      />
+                    </div>
+                    <div className="relative flex items-end">
                       <SheetsDrawerDialog open={open} setOpen={setOpen} />
                     </div>
+                  
                   </div>
                 </div>
                 <Button
@@ -257,37 +296,7 @@ export function InstantlyFilterForm({
                         defaultValue={1}
                       />
                     </motion.div>
-                    {/* <motion.div
-                      initial={{ opacity: 0, scale: 1, y: -10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.5, y: 50 }}
-                      transition={{ duration: 0.8 }}
-                      className="flex flex-col gap-1.5"
-                    >
-                      <Label htmlFor="concurrency" className={"text-[12px]"}>
-                        Concurrency
-                        <Tooltip>
-                          <TooltipTrigger>
-                            {" "}
-                            <FaInfoCircle />
-                          </TooltipTrigger>
-                          <TooltipContent
-                            className={"bg-[#212121] text-white fill-[#212121]"}
-                          >
-                            <p className="text-[9px]">
-                              Number of emails to be fetch for each request
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </Label>
-                      <Input
-                        id="concurrency"
-                        name="concurrency"
-                        type="number"
-                        min="1"
-                        defaultValue={3}
-                      />
-                    </motion.div> */}
+                  
                     <motion.div
                       initial={{ opacity: 0, scale: 1, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -392,10 +401,39 @@ export function InstantlyFilterForm({
                       transition={{ duration: 1 }}
                       className="flex flex-col gap-1.5"
                     >
-                      <Label
-                        htmlFor="delayMs"
-                        className={"text-[12px]"}
-                      >
+                      <Label htmlFor="delayMs" className={"text-[12px]"}>
+                        delayMs
+                        <Tooltip>
+                          <TooltipTrigger>
+                            {" "}
+                            <FaInfoCircle />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className={"bg-[#212121] text-white fill-[#212121]"}
+                          >
+                            <p className="text-[9px]">
+                              Delay per Request (instantly.ai 20 requests/min)
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </Label>
+                      <Input
+                        id="delayMs"
+                        name="delayMs"
+                        type="number"
+                        min="0"
+                        step="100"
+                        defaultValue={300}
+                      />
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, scale: 1, y: -10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.5, y: 50 }}
+                      transition={{ duration: 1 }}
+                      className="flex flex-col gap-1.5"
+                    >
+                      <Label htmlFor="delayMs" className={"text-[12px]"}>
                         delayMs
                         <Tooltip>
                           <TooltipTrigger>

@@ -36,12 +36,20 @@ const chartConfig = {
     label: "Fetched Interested Leads",
     color: "var(--chart-2)",
   },
+  appended: {
+    label: "Appended Leads To CRM",
+    color: "var(--chart-3)",
+  },
+  total_fetched: {
+    label: "Total Fetched Leads",
+    color: "var(--chart-4)",
+  },
 };
 
 export function ChartAreaInteractive({ chartData }) {
   const [timeRange, setTimeRange] = React.useState("90d");
 
-  // ✅ Sort ascending so newest date is at the right
+  // Sort ascending so newest date is at the right
   const filteredData = React.useMemo(() => {
     return [...chartData].sort((a, b) => new Date(a.date) - new Date(b.date));
   }, [chartData]);
@@ -78,9 +86,12 @@ export function ChartAreaInteractive({ chartData }) {
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[250px] w-full"
+          className="aspect-auto h-[350px] w-full overflow-visible "
         >
-          <AreaChart data={filteredData}>
+          <AreaChart
+            data={filteredData}
+            margin={{ top: 90, right: 40, left: 10, bottom: 20 }}
+          >
             <defs>
               <linearGradient id="approved" x1="0" y1="0" x2="0" y2="1">
                 <stop
@@ -106,6 +117,30 @@ export function ChartAreaInteractive({ chartData }) {
                   stopOpacity={0.1}
                 />
               </linearGradient>
+              <linearGradient id="appended" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--chart-3)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--chart-3)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+              <linearGradient id="total_fetched" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor="var(--chart-4)"
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor="var(--chart-4)"
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
             </defs>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -119,13 +154,14 @@ export function ChartAreaInteractive({ chartData }) {
                 return date.toLocaleString("en-US", {
                   month: "short",
                   day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
+                  // hour: "2-digit",
+                  // minute: "2-digit",
                   hour12: true,
                 });
               }}
             />
             <YAxis hide domain={[0, (dataMax) => dataMax * 1.1]} />
+
             <ChartTooltip
               cursor={false}
               content={
@@ -151,6 +187,18 @@ export function ChartAreaInteractive({ chartData }) {
               type="natural"
               fill="url(#fetched)"
               stroke="var(--chart-2)"
+            />
+            <Area
+              dataKey="appended"
+              type="natural"
+              fill="url(#appended)"
+              stroke="var(--chart-3)"
+            />
+            <Area
+              dataKey="total_fetched"
+              type="natural"
+              fill="url(#total_fetched)"
+              stroke="var(--chart-4)"
             />
 
             <ChartLegend content={<ChartLegendContent />} />

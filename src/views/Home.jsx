@@ -11,7 +11,7 @@ import {
 import LoaderProgress from "./../components/custom/loading/LoaderProgress";
 import { socket } from "../utils/utils";
 import { useNavigate } from "react-router-dom";
-import { EncodingConfirmationForm } from './../components/EncodingConfirmationForm';
+import { EncodingConfirmationForm } from "./../components/EncodingConfirmationForm";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -43,26 +43,40 @@ const Home = () => {
   // Load existing data
   useEffect(() => {
     dispatch(getExistingSheets(import.meta.env.VITE_SHEET_ID));
-    dispatch(getExistingCampaigns());
+    // dispatch(getExistingCampaigns());
   }, []);
 
   // Socket listener for progress updates
   useEffect(() => {
     if (!socket) return;
 
-    const handleProgress = (progress) => {
-      console.log("New progress:", progress);
-      // Add new progress to the array
-      setProgressList((prevList) => [...prevList, progress]);
-      // Whenever new progress comes in, force show the loader
-      setForceShowLoader(true);
-      // Reset inactivity timer
-      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
-      inactivityTimer.current = setTimeout(() => {
-        console.log("No new progress for threshold → closing loader");
-        setForceShowLoader(false);
-      }, 60000); // 60 seconds <threshold></threshold>
-    };
+   const handleProgress = (progress) => {
+  console.log("New progress:", progress);
+
+  setProgressList((prevList) => {
+    // If the list is empty or the new runId matches, append normally
+    if (prevList.length === 0 || prevList[0].runId === progress.runId) {
+      return [...prevList, progress];
+    }
+
+    // Otherwise, it's a new run — clear previous progress and start fresh
+    console.log(
+      `New run detected (${progress.runId}) → clearing previous progress.`
+    );
+    return [progress];
+  });
+
+  // Force show loader whenever a new progress comes in
+  setForceShowLoader(true);
+
+  // Reset inactivity timer
+  if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+  inactivityTimer.current = setTimeout(() => {
+    console.log("No new progress for threshold → closing loader");
+    setForceShowLoader(false);
+  }, 10000); // 10 seconds
+};
+
 
     socket.on("progress", handleProgress);
 
@@ -92,20 +106,31 @@ const Home = () => {
       progressList.length > 0 &&
       progressList.every((item) => item.percentComplete === 100));
 
-useEffect(() => {
-  if (navigateToLogs) {
-    navigateToLogsClear();
-    window.open("/logs", "_blank"); // opens logs in a new tab/window
+  useEffect(() => {
+    if (navigateToLogs) {
+      navigateToLogsClear();
+      window.open("/dashboard", "_blank"); // opens logs in a new tab/window
+    }
+  }, [navigateToLogs]);
+
+  const shouldShowLoader1 = true;
+  const shouldShowEncondingReq = true;
+
+  console.log("SOCKET");
+  console.log(socket.id);
+
+  function getClientUUID() {
+    let id = localStorage.getItem("client_uuid");
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("client_uuid", id);
+    }
+    return id;
   }
-}, [navigateToLogs]);
+  const clientId = getClientUUID();
 
-
-
-  const shouldShowLoader1 = true
-  const shouldShowEncondingReq = true
-
-
-
+  console.log("clientId");
+  console.log(clientId);
 
   return (
     <div className="relative h-screen w-full p-0 flex justify-center items-center">
@@ -116,9 +141,11 @@ useEffect(() => {
         <InstantlyFilterForm
           className={"w-11/12 md:w-[500px]"}
           existingSheets={existingSheets}
-          existingCampaigns={existingCampaigns}
+          // existingCampaigns={existingCampaigns}
           instantlyloader={Boolean(instantlyloader)}
           encodingLoader={Boolean(encodingLoader)}
+          clientId={clientId}
+          setProgressList={setProgressList}
         />
       </div>
 
@@ -136,8 +163,6 @@ useEffect(() => {
           />
         </div>
       )} */}
-
-
 
       {shouldShowLoader && (
         <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center">

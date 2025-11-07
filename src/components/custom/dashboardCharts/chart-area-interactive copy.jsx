@@ -98,10 +98,7 @@ export function ChartAreaInteractive({ chartData }) {
     );
   }, [chartData]);
 
-  const leadsApproved = [
-    { id: 1, approval_date: "2025-10-16", approval_count: 55 },
-    { id: 6, approval_date: "2025-10-15", approval_count: 6 },
-  ];
+ 
 
   return (
     <Card className="pt-0">

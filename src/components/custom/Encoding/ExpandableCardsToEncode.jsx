@@ -95,7 +95,7 @@ export function ExpandableCardsToEncode({ cards, onEncode, onDeny, loader }) {
             <motion.div
               layoutId={`card-${active.lead_email}-${id}`}
               ref={ref}
-              className="w-full max-w-[750px] h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden p-3"
+              className="w-full max-w-6/12 h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden p-3"
             >
               <div>
                 <div className="flex justify-between items-start p-4">
@@ -134,7 +134,7 @@ export function ExpandableCardsToEncode({ cards, onEncode, onDeny, loader }) {
                     </motion.p>
                     <motion.div
                       layoutId={`description-${active.address}${active.lead_email}-${id}`}
-                      className="text-neutral-600 dark:text-neutral-400 border-y mt-2 py-2"
+                      className="text-neutral-600 dark:text-neutral-400 border-y mt-2 py-2 flex gap-3"
                     >
                       <h2>
                         <span className="font-semibold">City: </span>
@@ -155,11 +155,15 @@ export function ExpandableCardsToEncode({ cards, onEncode, onDeny, loader }) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="text-neutral-600 text-xs md:text-sm lg:text-base h-50 md:h-fit pb-2 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+                        className="text-neutral-600 text-xs md:text-sm lg:text-base h-50 md:h-fit pb-2 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 "
                       >
-                        <div className="flex flex-col gap-1 pb-10">
+                        <div className="flex flex-col gap-1 pb-2 ">
                           <span className="font-bold">Email Reply: </span>
-                          <p>{active.email_signature}</p>
+                          <p>{active.email_reply}</p>
+                        </div>
+                        <div className="flex flex-col gap-1  border-y py-2">
+                          <span className="font-bold">Description: </span>
+                          <p>{active.details}</p>
                         </div>
                       </motion.div>
                     </div>

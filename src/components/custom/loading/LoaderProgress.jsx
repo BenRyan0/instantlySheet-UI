@@ -22,15 +22,21 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
   );
   const fieldsToShow = [
     {
-      key: "distinctLeadsChecked",
-      label: "Emails (redis)",
-      icon: <FaCode />,
-    },
-    {
       key: "totalEmailsCollected",
       label: "Emails Collected",
       icon: <FaCode />,
     },
+    {
+      key: "unProcessedLeads",
+      label: "OK (Uprocessed)",
+      icon: <FaCode />,
+    },
+    // {
+    //   key: "distinctLeadsChecked",
+    //   label: "Emails (redis)",
+    //   icon: <FaCode />,
+    // },
+
     {
       key: "interestedLeadCount",
       label: "Interested",

@@ -15,10 +15,7 @@ const Charts = () => {
   },[])
 
 
-   const leadsApproved = [
-    { id: 1, approval_date: "2025-10-16", approval_count: 55 },
-    { id: 6, approval_date: "2025-10-17", approval_count: 70 },
-  ];
+
 
   
   return (
@@ -28,7 +25,7 @@ const Charts = () => {
           </div>
           <div className="z-40 w-9/12 relative h-screen flex justify-center items-center ">
             <div className="absolute top-35 pb-20 w-full">
-              <ChartAreaInteractive chartData={logs} leadsApproved={leadsApproved}/>
+              <ChartAreaInteractive chartData={logs} />
             </div>
           </div>
         </div>

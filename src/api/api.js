@@ -1,9 +1,10 @@
 import axios from "axios";
-const local = "http://localhost:8184";
+const local = "http://localhost:9000";
+// const local = "http://localhost:8184";
 const production1 = "http://localhost:8184";
 
 let api_url = ''
-let mode = 'pro'
+let mode = 'dev'
 
 
 if(mode === 'pro'){

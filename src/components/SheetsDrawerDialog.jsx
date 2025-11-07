@@ -42,7 +42,7 @@ export function SheetsDrawerDialog({ open, setOpen }) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="outline">
-            <IoMdAdd /> New Sheet
+            <IoMdAdd /> 
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[530px] z-50">
