@@ -1,35 +1,53 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavBar } from "./../components/layout/NavBar";
+import { NavBar } from "../components/layout/NavBar";
 import { InstantlyFilterForm } from "../components/InstantlyFilterForm";
 import { getExistingSheets, messageClear } from "@/store/reducers/sheetReducer";
-import toast from "react-hot-toast";
 import {
   getExistingCampaigns,
   navigateToLogsClear,
+  resetEncodingState,
 } from "@/store/reducers/instantlyAiReducer";
-import LoaderProgress from "./../components/custom/loading/LoaderProgress";
+import LoaderProgress from "../components/custom/loading/LoaderProgress";
+import toast from "react-hot-toast";
 import { socket } from "../utils/utils";
-import { useNavigate } from "react-router-dom";
-import { EncodingConfirmationForm } from "./../components/EncodingConfirmationForm";
+
+const INACTIVITY_TIMEOUT = 10000; // 10 seconds
 
 const Home = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { existingSheets, successMessage, errorMessage } = useSelector(
     (state) => state.sheet
   );
-  const { existingCampaigns, instantlyloader, encodingLoader, navigateToLogs } =
-    useSelector((state) => state.instantlyAi);
+  const {
+    instantlyloader,
+    encodingLoader,
+    navigateToLogs,
+    isEncodingDone,
+  } = useSelector((state) => state.instantlyAi);
+
   const [progressList, setProgressList] = useState([]);
   const [maxPage, setMaxPage] = useState(0);
   const [maxEmailsCap, setMaxEmailsCap] = useState(0);
-  const [forceShowLoader, setForceShowLoader] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
 
-  // ref to store timeout id
   const inactivityTimer = useRef(null);
 
-  // Messages
+  // -----------------------------
+  // Generate & memoize client UUID
+  // -----------------------------
+  const clientId = useMemo(() => {
+    let id = localStorage.getItem("client_uuid");
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("client_uuid", id);
+    }
+    return id;
+  }, []);
+
+  // -----------------------------
+  // Toast message feedback
+  // -----------------------------
   useEffect(() => {
     if (successMessage) {
       toast.success(successMessage);
@@ -40,43 +58,70 @@ const Home = () => {
     }
   }, [successMessage, errorMessage, dispatch]);
 
-  // Load existing data
+  // -----------------------------
+  // Initial load (only once)
+  // -----------------------------
   useEffect(() => {
     dispatch(getExistingSheets(import.meta.env.VITE_SHEET_ID));
-    // dispatch(getExistingCampaigns());
-  }, []);
+    // dispatch(getExistingCampaigns()); // Optional
+  }, [dispatch]);
 
-  // Socket listener for progress updates
+  // -----------------------------
+  // Socket connection handling
+  // -----------------------------
   useEffect(() => {
     if (!socket) return;
 
-   const handleProgress = (progress) => {
-  console.log("New progress:", progress);
+    const handleConnect = () => console.log(`[SOCKET] Connected: ${socket.id}`);
+    const handleDisconnect = (reason) =>
+      console.warn(`[SOCKET] Disconnected → ${reason}`);
+    const handleError = (err) =>
+      console.error(`[SOCKET] Error → ${err.message}`);
 
-  setProgressList((prevList) => {
-    // If the list is empty or the new runId matches, append normally
-    if (prevList.length === 0 || prevList[0].runId === progress.runId) {
-      return [...prevList, progress];
-    }
+    socket.on("connect", handleConnect);
+    socket.on("disconnect", handleDisconnect);
+    socket.on("connect_error", handleError);
 
-    // Otherwise, it's a new run — clear previous progress and start fresh
-    console.log(
-      `New run detected (${progress.runId}) → clearing previous progress.`
-    );
-    return [progress];
-  });
+    return () => {
+      socket.off("connect", handleConnect);
+      socket.off("disconnect", handleDisconnect);
+      socket.off("connect_error", handleError);
+    };
+  }, []);
 
-  // Force show loader whenever a new progress comes in
-  setForceShowLoader(true);
+  // -----------------------------
+  // Progress handling (main event)
+  // -----------------------------
+  useEffect(() => {
+    if (!socket) return;
 
-  // Reset inactivity timer
-  if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
-  inactivityTimer.current = setTimeout(() => {
-    console.log("No new progress for threshold → closing loader");
-    setForceShowLoader(false);
-  }, 10000); // 10 seconds
-};
+    const handleProgress = (progress) => {
+      console.log("[SOCKET] Progress update:", progress);
 
+      setProgressList((prevList) => {
+        const isNewRun =
+          prevList.length === 0 || prevList[0].runId !== progress.runId;
+
+        // Avoid duplicates by checking if same ID + percentComplete already exists
+        const isDuplicate = prevList.some(
+          (p) =>
+            p.runId === progress.runId &&
+            p.percentComplete === progress.percentComplete
+        );
+        if (isDuplicate) return prevList;
+
+        return isNewRun ? [progress] : [...prevList, progress];
+      });
+
+      setShowLoader(true);
+
+      // Reset inactivity timeout
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+      inactivityTimer.current = setTimeout(() => {
+        console.log("No new progress for 10s → hiding loader");
+        setShowLoader(false);
+      }, INACTIVITY_TIMEOUT);
+    };
 
     socket.on("progress", handleProgress);
 
@@ -84,88 +129,89 @@ const Home = () => {
       socket.off("progress", handleProgress);
       if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
     };
-  }, [socket]);
+  }, []);
 
-  // Debug log
+  // -----------------------------
+  // Track max pages & email cap
+  // -----------------------------
   useEffect(() => {
-    console.log(progressList, "progressList");
+    if (progressList.length === 0) return;
+
+    const last = progressList[progressList.length - 1];
+    setMaxPage(last.maxPagesCap || 0);
+    setMaxEmailsCap(last.maxEmailsCap || 0);
   }, [progressList]);
 
+  // -----------------------------
+  // Auto-navigate to logs
+  // -----------------------------
+  // useEffect(() => {
+  //   if (!navigateToLogs) return;
+  //   dispatch(navigateToLogsClear());
+  //   // window.open("/dashboard", "_blank");
+  // }, [navigateToLogs, dispatch]);
+
+  // -----------------------------
+  // Reset state when encoding done
+  // -----------------------------
   useEffect(() => {
-    if (Array.isArray(progressList) && progressList.length > 0) {
-      const lastItem = progressList[progressList.length - 1];
-      setMaxPage(lastItem.maxPagesCap);
-      setMaxEmailsCap(lastItem.maxEmailsCap);
+    if (!isEncodingDone) return;
+
+    console.log("[APP] Encoding finished → resetting progress");
+
+    setProgressList([]);
+    setShowLoader(false);
+    setMaxPage(0);
+    setMaxEmailsCap(0);
+
+    if (inactivityTimer.current) {
+      clearTimeout(inactivityTimer.current);
+      inactivityTimer.current = null;
     }
-  }, [progressList]);
 
+    dispatch(resetEncodingState());
+  }, [isEncodingDone, dispatch]);
+
+  // -----------------------------
+  // Derived loader visibility
+  // -----------------------------
   const shouldShowLoader =
     encodingLoader ||
-    forceShowLoader ||
-    (Array.isArray(progressList) &&
-      progressList.length > 0 &&
-      progressList.every((item) => item.percentComplete === 100));
+    showLoader ||
+    (progressList.length > 0 &&
+      progressList.some((item) => item.percentComplete < 100));
 
-  useEffect(() => {
-    if (navigateToLogs) {
-      navigateToLogsClear();
-      window.open("/dashboard", "_blank"); // opens logs in a new tab/window
-    }
-  }, [navigateToLogs]);
-
-  const shouldShowLoader1 = true;
-  const shouldShowEncondingReq = true;
-
-  console.log("SOCKET");
-  console.log(socket.id);
-
-  function getClientUUID() {
-    let id = localStorage.getItem("client_uuid");
-    if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem("client_uuid", id);
-    }
-    return id;
-  }
-  const clientId = getClientUUID();
-
-  console.log("clientId");
-  console.log(clientId);
-
+  // -----------------------------
+  // Render
+  // -----------------------------
   return (
-    <div className="relative h-screen w-full p-0 flex justify-center items-center">
-      <div className="absolute top-0 mx-auto container z-50">
+    <div className="relative h-screen w-full flex justify-center items-center">
+      <div className="absolute top-0 w-full container mx-auto z-50">
         <NavBar />
       </div>
-      <div className="flex pt-40 md:pt-10 pb-10 px-4 z-40 w-full justify-center items-center flex-col">
+
+      <div className="flex flex-col w-full justify-center items-center pt-40 md:pt-10 pb-10 px-4 z-40">
         <InstantlyFilterForm
-          className={"w-11/12 md:w-[500px]"}
+          className="w-11/12 md:w-[500px]"
           existingSheets={existingSheets}
-          // existingCampaigns={existingCampaigns}
-          instantlyloader={Boolean(instantlyloader)}
-          encodingLoader={Boolean(encodingLoader)}
+          instantlyloader={!!instantlyloader}
+          encodingLoader={!!encodingLoader}
           clientId={clientId}
           setProgressList={setProgressList}
         />
       </div>
-
-      {/* {shouldShowEncondingReq && (
-        <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center overflow-y-scroll pt-[100px] pb-10 ">
-        <EncodingConfirmationForm RowData={toBeEncoded}/>
-        </div>
-      )} */}
-      {/* {shouldShowLoader1 && (
-        <div className="absolute bg-black/80 inset-0 z-40 flex justify-center items-center">
+         
+        {/* <div className="absolute bg-black/80 inset-0 z-40 flex justify-center items-center">
           <LoaderProgress
             progressArray={progressList}
             maxPage={maxPage}
             maxEmailsCap={maxEmailsCap}
           />
-        </div>
-      )} */}
+        </div> */}
+    
 
       {shouldShowLoader && (
-        <div className="absolute bg-black/80 inset-0 z-50 flex justify-center items-center">
+        <div className="absolute inset-0 bg-black/80 z-50 flex justify-center items-center">
           <LoaderProgress
             progressArray={progressList}
             maxPage={maxPage}

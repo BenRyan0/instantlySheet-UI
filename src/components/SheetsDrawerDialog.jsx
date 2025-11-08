@@ -42,6 +42,7 @@ export function SheetsDrawerDialog({ open, setOpen }) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant="outline">
+            Add New Sheet
             <IoMdAdd /> 
           </Button>
         </DialogTrigger>

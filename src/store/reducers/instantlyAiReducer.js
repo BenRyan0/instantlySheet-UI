@@ -3,15 +3,24 @@ import api from "../../api/api";
 
 export const stopEncoding = createAsyncThunk(
   "auth/stopEncoding",
-  async (_, { fulfillWithValue, rejectWithValue }) => {
+  async ({ runId }, { fulfillWithValue, rejectWithValue }) => {
+    console.log(`Stopping run ID: ${runId}`);
+
     try {
-      const { data } = await api.post(`/agent/stop-current-run`);
+      const { data } = await api.post(`/agent/stop-current-run`, { runId });
       return fulfillWithValue(data);
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      console.error(
+        "Stop encoding failed:",
+        error.response?.data || error.message
+      );
+      return rejectWithValue(
+        error.response?.data || { message: "Unexpected error" }
+      );
     }
   }
 );
+
 export const getExistingCampaigns = createAsyncThunk(
   "auth/getExistingCampaigns",
   async (_, { fulfillWithValue, rejectWithValue }) => {
@@ -26,7 +35,18 @@ export const getExistingCampaigns = createAsyncThunk(
 
 export const startAgentEncoding = createAsyncThunk(
   "auth/startAgentEncoding",
-  async ({ opts, sheetName,sheetNameForPartnership,descriptionExtraction,autoAppend,clientId,sheetNameForSBA}, { fulfillWithValue, rejectWithValue }) => {
+  async (
+    {
+      opts,
+      sheetName,
+      sheetNameForPartnership,
+      descriptionExtraction,
+      autoAppend,
+      clientId,
+      sheetNameForSBA,
+    },
+    { fulfillWithValue, rejectWithValue }
+  ) => {
     try {
       const { data } = await api.post(`/agent/start-agent-encoding`, {
         opts,
@@ -35,8 +55,7 @@ export const startAgentEncoding = createAsyncThunk(
         descriptionExtraction,
         sheetNameForSBA,
         autoAppend,
-        clientId
-        
+        clientId,
       });
       return fulfillWithValue(data);
     } catch (error) {
@@ -45,19 +64,17 @@ export const startAgentEncoding = createAsyncThunk(
   }
 );
 
-
-
-
 export const instantlyAiReducer = createSlice({
   name: "instantlyAi",
   initialState: {
     instantlyloader: false,
     encodingLoader: false,
+    isEncodingDone: false,
     errorMessage: "",
     successMessage: "",
     existingCampaigns: [],
     totalExistingCampaigns: 0,
-    navigateToLogs: false
+    navigateToLogs: false,
   },
   reducers: {
     messageClear: (state, _) => {
@@ -66,7 +83,9 @@ export const instantlyAiReducer = createSlice({
     },
     navigateToLogsClear: (state, _) => {
       state.navigateToLogs = false;
-
+    },
+    resetEncodingState: (state, _) => {
+      state.isEncodingDone = false;
     },
   },
 
@@ -87,15 +106,18 @@ export const instantlyAiReducer = createSlice({
     // encoding
     builder.addCase(startAgentEncoding.pending, (state, _) => {
       state.encodingLoader = true;
+      state.isEncodingDone = false;
     });
     builder.addCase(startAgentEncoding.rejected, (state, payload) => {
       state.encodingLoader = false;
       state.errorMessage = payload.payload.error;
+      state.isEncodingDone = false;
     });
     builder.addCase(startAgentEncoding.fulfilled, (state, payload) => {
       state.encodingLoader = false;
       state.successMessage = payload.payload.message;
       state.navigateToLogs = true;
+      state.isEncodingDone = true;
     });
 
     //stop encoding
@@ -113,5 +135,5 @@ export const instantlyAiReducer = createSlice({
   },
 });
 
-export const { messageClear, navigateToLogsClear } = instantlyAiReducer.actions;
+export const { messageClear, navigateToLogsClear, resetEncodingState } = instantlyAiReducer.actions;
 export default instantlyAiReducer.reducer;

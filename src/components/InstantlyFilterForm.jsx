@@ -65,11 +65,11 @@ export function InstantlyFilterForm({
 
   // Default opts values
   const defaultOpts = {
-    pageLimit: 2,
+    pageLimit: 10,
     emailsPerLead: 1,
     concurrency: 3,
-    maxEmails: 10,
-    maxPages: 2,
+    maxEmails: 50,
+    maxPages: 10,
     aiInterestThreshold: 1,
     delayMs: 300,
   };
@@ -325,7 +325,7 @@ export function InstantlyFilterForm({
                         name="maxEmails"
                         type="number"
                         min="1"
-                        defaultValue={200}
+                        defaultValue={50}
                       />
                     </motion.div>
                     <motion.div
@@ -426,38 +426,7 @@ export function InstantlyFilterForm({
                         defaultValue={300}
                       />
                     </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, scale: 1, y: -10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.5, y: 50 }}
-                      transition={{ duration: 1 }}
-                      className="flex flex-col gap-1.5"
-                    >
-                      <Label htmlFor="delayMs" className={"text-[12px]"}>
-                        delayMs
-                        <Tooltip>
-                          <TooltipTrigger>
-                            {" "}
-                            <FaInfoCircle />
-                          </TooltipTrigger>
-                          <TooltipContent
-                            className={"bg-[#212121] text-white fill-[#212121]"}
-                          >
-                            <p className="text-[9px]">
-                              Delay per Request (instantly.ai 20 requests/min)
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </Label>
-                      <Input
-                        id="delayMs"
-                        name="delayMs"
-                        type="number"
-                        min="0"
-                        step="100"
-                        defaultValue={300}
-                      />
-                    </motion.div>
+                    
                   </motion.div>
                 )}
                 <Button

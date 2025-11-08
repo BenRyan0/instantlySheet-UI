@@ -17,9 +17,28 @@ import { FaStop } from "react-icons/fa";
 
 const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
   const dispatch = useDispatch();
+
   const { successMessage, errorMessage } = useSelector(
     (state) => state.instantlyAi
   );
+
+  const [latestValue, setLatestValue] = useState({});
+
+  useEffect(() => {
+    if (progressArray.length > 0) {
+      const latest = progressArray[progressArray.length - 1];
+      console.log("Latest value:", latest);
+      setLatestValue(latest);
+    }
+  }, [progressArray]);
+
+  console.log(
+    "------------------------ progressArray ------------------------"
+  );
+  console.log(progressArray);
+  console.log("------------------------ latestValue ------------------------");
+  console.log(latestValue.runId);
+
   const fieldsToShow = [
     {
       key: "totalEmailsCollected",
@@ -28,18 +47,7 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
     },
     {
       key: "unProcessedLeads",
-      label: "OK (Uprocessed)",
-      icon: <FaCode />,
-    },
-    // {
-    //   key: "distinctLeadsChecked",
-    //   label: "Emails (redis)",
-    //   icon: <FaCode />,
-    // },
-
-    {
-      key: "interestedLeadCount",
-      label: "Interested",
+      label: "New Lead",
       icon: <FaCode />,
     },
     {
@@ -47,7 +55,6 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
       label: "Pages Fetched",
       icon: <FaCode />,
     },
-
     {
       key: "totalInterestedLLM",
       label: "LLM:INTERESTED",
@@ -112,8 +119,9 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
 
   return (
     <div className="relative">
-      <div className="shadow-lg shadow-green-700/60 bg-white rounded-md">
-        <div className="mx-auto grid w-full max-w-7xl grid-cols-2 md:grid-cols-3 lg:grid-cols-7 bg-transparent">
+      <div className="shadow-lg shadow-green-700/60 bg-white rounded-sm p-3">
+        {/* <div className="mx-auto flex flex-row gap-5 px-10 py-2 w-full max-w-7xl bg-transparent"> */}
+        <div className="mx-auto grid w-full min-w-md max-w-7xl grid-cols- md:grid-cols-6 lg:grid-cols-6 bg-transparent">
           {fieldsToShow.map(({ key, label, icon }) => (
             <ProgressItem
               key={key}
@@ -128,18 +136,18 @@ const LoaderProgress = ({ progressArray, maxPage, maxEmailsCap }) => {
         </div>
         <div className=" mx-auto w-full max-w-full pb-2 px-2 flex justify-center items-end">
           <Progress
-            value={latest.percentComplete}
-            className="bg-gray-400/60 rounded-2xl mx-4"
+            value={latestValue.percentComplete}
+            className="bg-gray-400/60 rounded-2xl mx-2"
           />
         </div>
       </div>
-      <div className="absolute -top-7 inset-x-0 flex justify-end items-end text-xs group ">
+      <div className="absolute -top-6 inset-x-0 flex justify-end items-end text-xs group">
         <button
-          onClick={() => dispatch(stopEncoding())}
-          className="flex justify-center items-center gap-1.5 px-3 py-1 rounded-sm hover:text-red-300 transition-all duration-300"
+          onClick={() => dispatch(stopEncoding({ runId: latestValue.runId }))}
+          className="flex justify-center items-center gap-1.5 px-2 py-0.5 rounded-xs transition-all duration-300 bg-red-600/10 text-red-600 hover:bg-red-600/20 focus-visible:ring-red-600/20 dark:bg-red-400/10 dark:text-red-400 dark:hover:bg-red-400/20 dark:focus-visible:ring-red-400/40"
         >
-          <FaStop />
-          <span className="text-slate-600">Stop</span>
+          <FaStop size={9} />
+          <span className="text-[10px]">Stop</span>
         </button>
       </div>
     </div>
@@ -157,12 +165,12 @@ const ProgressItem = ({
   const { ref, animatedValue } = useAnimatedValue(value, version);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-1 border-r border-none font-mono md:h-27 md:gap-2 ">
-      <div className="relative w-full overflow-hidden text-center MatrixFont  ">
+    <div className="flex flex-col items-center justify-center gap-1 border-r border-none  md:h-27 md:gap-2 text-center px-3">
+      <div className="relative w-full overflow-hidden text-center  ">
         <div className="flex justify-center items-center gap-1">
           <span
             ref={ref}
-            className="block text-lg font-medium text-green-700/60 md:text-3xl lg:text-4xl xl:text-5xl"
+            className="block text-4xl font-medium text-green-700/60 md:text-4xl lg:text-4xl xl:text-4xl MatrixFont "
           >
             {String(animatedValue)}
             {label === "Pages Fetched" ? `/${maxPage}` : ""}
@@ -174,9 +182,12 @@ const ProgressItem = ({
           </div> */}
         </div>
       </div>
-      <span className="text-[10px] font-bold text-slate-500 md:text-sm lg:text-base px-3 text-center text-wrap">
+      {/* <span className="text-xs font-bold text-slate-500 md:text-sm lg:text-base px-3 text-center text-wrap">
         {label}
-      </span>
+      </span> */}
+      <p className="text-black text-[9px]">
+        {label}
+      </p>
     </div>
   );
 };

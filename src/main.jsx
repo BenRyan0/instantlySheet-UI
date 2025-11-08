@@ -7,6 +7,9 @@ import { Provider } from "react-redux";
 import { Toaster } from "react-hot-toast";
 import store from "./store/index";
 
+
+
+
 ReactDOM.createRoot(document.getElementById('root')).render(
  <Provider store={store}>
     <App />
