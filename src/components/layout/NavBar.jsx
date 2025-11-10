@@ -75,12 +75,8 @@ export function NavBar() {
         <NavBody>
           <NavbarLogo />
           <div className="">
-            {/* <div className="flex justify-center items-center gap-1">
-              <span className="text-sm font-bold">{userInfo?.username}</span>
-              <FaRegUserCircle size={24}/>
-            </div> */}
             <ButtonGroup>
-              <Button variant="outline" className="w-[110px]">
+              <Button variant="outline" className="w-fit">
                 <span className="text-sm font-bold">{userInfo?.username}</span>
                 <FaRegUserCircle size={24} />
               </Button>
@@ -96,11 +92,11 @@ export function NavBar() {
                       <RiRobot2Fill />
                       <a href="/">Agent</a>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                    {/* <DropdownMenuSeparator /> */}
+                    {/* <DropdownMenuItem>
                       <FaListAlt />
                       <a href="/to-encode">To Encode</a>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
                       <TbBrandDatabricks />

@@ -12,8 +12,6 @@ import LoaderProgress from "../components/custom/loading/LoaderProgress";
 import toast from "react-hot-toast";
 import { socket } from "../utils/utils";
 
-import { toast as showToast } from "sonner" // <-- aliasing toast to showToast
-
 
 const INACTIVITY_TIMEOUT = 10000; // 10 seconds
 
@@ -176,34 +174,29 @@ const Home = () => {
       // -----------------------------
 // Encoding Done Listener
 // -----------------------------
-// -----------------------------
-// Listen for encoding_done
-// -----------------------------
 useEffect(() => {
   if (!socket) return;
 
   const handleEncodingDone = (payload) => {
     console.log("[SOCKET] Encoding done:", payload);
 
-    // Show toast message
+    // Extract the message and show toast
     if (payload?.message) {
       toast.success(payload.message);
     }
 
-    // Clear inactivity timer if any
     if (inactivityTimer.current) {
       clearTimeout(inactivityTimer.current);
       inactivityTimer.current = null;
     }
   };
 
-  socket.on("encoding_progress", handleEncodingDone);
+  socket.on("encoding_done", handleEncodingDone);
 
   return () => {
-    socket.off("encoding_progress", handleEncodingDone);
+    socket.off("encoding_done", handleEncodingDone);
   };
-}, []);
-
+}, [dispatch]);
 
   useEffect(() => {
     if (navigateToLogs) {
