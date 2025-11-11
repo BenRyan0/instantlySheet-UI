@@ -28,37 +28,21 @@ import {
 export const description = "An interactive area chart";
 
 const chartConfig = {
-  approved: {
-    label: "Approved And Encoded Leads",
-    color: "var(--chart-1)",
-  },
-  fetched: {
-    label: "Fetched Interested Leads",
-    color: "var(--chart-2)",
-  },
-  appended: {
-    label: "Appended Leads To CRM",
-    color: "var(--chart-3)",
-  },
-  total_fetched: {
-    label: "Total Fetched Leads",
-    color: "var(--chart-4)",
-  },
   offers: {
     label: "Interested(OFFER)",
-    color: "var(--chart-4)",
+    color: "var(--chart-1)",
   },
   sba: {
     label: "Interested(SBA)",
-    color: "var(--chart-4)",
+    color: "var(--chart-2)",
   },
   partnership: {
     label: "Interested(PARTNERSHIP)",
-    color: "var(--chart-4)",
+    color: "var(--chart-3)",
   },
 };
 
-export function ChartAreaInteractive({ chartData }) {
+export function ReplyClassification({ chartData }) {
   const [timeRange, setTimeRange] = React.useState("90d");
 
   // Sort ascending so newest date is at the right
@@ -70,9 +54,9 @@ export function ChartAreaInteractive({ chartData }) {
     <Card className="pt-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
-          <CardTitle>InstaSheet</CardTitle>
+          <CardTitle>Reply Classifications</CardTitle>
           <CardDescription className={"text-xs"}>
-            Showing leads and encodings over time
+            Email Replies Classification Distribution 
           </CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
@@ -105,87 +89,39 @@ export function ChartAreaInteractive({ chartData }) {
             margin={{ top: 90, right: 40, left: 10, bottom: 20 }}
           >
             <defs>
-              <linearGradient id="approved" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--chart-1)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--chart-1)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="fetched" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--chart-2)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--chart-2)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="appended" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--chart-3)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--chart-3)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-              <linearGradient id="total_fetched" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--chart-4)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--chart-4)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
               <linearGradient id="offers" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--chart-4)"
+                  stopColor="var(--chart-1)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--chart-4)"
+                  stopColor="var(--chart-1)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
               <linearGradient id="sba" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--chart-4)"
+                  stopColor="var(--chart-2)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--chart-4)"
+                  stopColor="var(--chart-2)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
               <linearGradient id="partnership" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--chart-4)"
+                  stopColor="var(--chart-3)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--chart-4)"
+                  stopColor="var(--chart-3)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
@@ -224,29 +160,24 @@ export function ChartAreaInteractive({ chartData }) {
                 />
               }
             />
+          
             <Area
-              dataKey="approved"
+              dataKey="offers"
               type="natural"
-              fill="url(#approved)"
-              stroke="var(--chart-1)"
+              fill="url(#offers)"
+              stroke="var(--chart-4)"
             />
             <Area
-              dataKey="fetched"
+              dataKey="sba"
               type="natural"
-              fill="url(#fetched)"
+              fill="url(#sba)"
               stroke="var(--chart-2)"
             />
             <Area
-              dataKey="appended"
+              dataKey="partnership"
               type="natural"
-              fill="url(#appended)"
+              fill="url(#partnership)"
               stroke="var(--chart-3)"
-            />
-            <Area
-              dataKey="total_fetched"
-              type="natural"
-              fill="url(#total_fetched)"
-              stroke="var(--chart-4)"
             />
 
             <ChartLegend content={<ChartLegendContent />} />

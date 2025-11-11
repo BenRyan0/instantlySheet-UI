@@ -179,17 +179,16 @@ export const NavbarLogo = () => {
   return (
     <a
       href="/"
-      className="relative z-50 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black group "
+      className="relative z-50 flex items-end justify-end text-black"
     >
-  
-      <span className="bg-white p-[2px] rounded-sm group-hover:-translate-y-2 hover:text-white transition-all duration-400 ease-in-out">
+      <span className=" rounded-sm hover:text-white">
         {/* <MdHeadsetMic size={24} /> */}
-        <img src="/gif/headphones.gif" className="h-10 w-10 " alt="" />
+        <img src="/public/images/logo.png" className="h-7" alt="" />
       </span>
 
-      <span className="text-black text-lg dark:text-white font-bold group-hover:-translate-y-2 transition-all duration-500 ease-in-out">
-        LHPI
-      </span>
+      <h2 className="text-base text-white font-bold">
+        Insta<span className="italic pr-1">Sheet </span>{" "}
+      </h2>
     </a>
   );
 };

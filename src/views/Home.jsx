@@ -12,8 +12,7 @@ import LoaderProgress from "../components/custom/loading/LoaderProgress";
 import toast from "react-hot-toast";
 import { socket } from "../utils/utils";
 
-import { toast as showToast } from "sonner" // <-- aliasing toast to showToast
-
+import { toast as showToast } from "sonner"; // <-- aliasing toast to showToast
 
 const INACTIVITY_TIMEOUT = 10000; // 10 seconds
 
@@ -22,12 +21,8 @@ const Home = () => {
   const { existingSheets, successMessage, errorMessage } = useSelector(
     (state) => state.sheet
   );
-  const {
-    instantlyloader,
-    encodingLoader,
-    navigateToLogs,
-    isEncodingDone,
-  } = useSelector((state) => state.instantlyAi);
+  const { instantlyloader, encodingLoader, navigateToLogs, isEncodingDone } =
+    useSelector((state) => state.instantlyAi);
 
   const [progressList, setProgressList] = useState([]);
   const [maxPage, setMaxPage] = useState(0);
@@ -173,37 +168,36 @@ const Home = () => {
     (progressList.length > 0 &&
       progressList.some((item) => item.percentComplete < 100));
 
-      // -----------------------------
-// Encoding Done Listener
-// -----------------------------
-// -----------------------------
-// Listen for encoding_done
-// -----------------------------
-useEffect(() => {
-  if (!socket) return;
+  // -----------------------------
+  // Encoding Done Listener
+  // -----------------------------
+  // -----------------------------
+  // Listen for encoding_done
+  // -----------------------------
+  useEffect(() => {
+    if (!socket) return;
 
-  const handleEncodingDone = (payload) => {
-    console.log("[SOCKET] Encoding done:", payload);
+    const handleEncodingDone = (payload) => {
+      console.log("[SOCKET] Encoding done:", payload);
 
-    // Show toast message
-    if (payload?.message) {
-      toast.success(payload.message);
-    }
+      // Show toast message
+      if (payload?.message) {
+        toast.success(payload.message);
+      }
 
-    // Clear inactivity timer if any
-    if (inactivityTimer.current) {
-      clearTimeout(inactivityTimer.current);
-      inactivityTimer.current = null;
-    }
-  };
+      // Clear inactivity timer if any
+      if (inactivityTimer.current) {
+        clearTimeout(inactivityTimer.current);
+        inactivityTimer.current = null;
+      }
+    };
 
-  socket.on("encoding_progress", handleEncodingDone);
+    socket.on("encoding_progress", handleEncodingDone);
 
-  return () => {
-    socket.off("encoding_progress", handleEncodingDone);
-  };
-}, []);
-
+    return () => {
+      socket.off("encoding_progress", handleEncodingDone);
+    };
+  }, []);
 
   useEffect(() => {
     if (navigateToLogs) {
@@ -222,22 +216,20 @@ useEffect(() => {
         <InstantlyFilterForm
           className="w-11/12 md:w-[500px]"
           existingSheets={existingSheets}
-          instantlyloader={!!instantlyloader}
-          encodingLoader={!!encodingLoader}
+          instantlyloader={instantlyloader}
+          encodingLoader={encodingLoader}
           clientId={clientId}
           setProgressList={setProgressList}
         />
       </div>
-         
-        {/* <div className="absolute bg-black/80 inset-0 z-40 flex justify-center items-center">
+
+      {/* <div className="absolute bg-black/80 inset-0 z-40 flex justify-center items-center">
           <LoaderProgress
             progressArray={progressList}
             maxPage={maxPage}
             maxEmailsCap={maxEmailsCap}
           />
         </div> */}
-
-    
 
       {shouldShowLoader && (
         <div className="absolute inset-0 bg-black/80 z-50 flex justify-center items-center">

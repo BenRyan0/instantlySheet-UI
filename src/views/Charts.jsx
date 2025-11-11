@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
 import { NavBar } from "./../components/layout/NavBar";
 import {ChartAreaInteractive}  from '@/components/custom/dashboardCharts/chart-area-interactive';
+import {ReplyClassification}  from '@/components/custom/dashboardCharts/ReplyClassification';
 import { getAllLogs } from "@/store/reducers/logsReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 const Charts = () => {
      const dispatch = useDispatch()
-  const {logs } = useSelector(
+  const {logs,encodingClassification } = useSelector(
     (state) => state.logs
   );
 
@@ -24,8 +25,10 @@ const Charts = () => {
             <NavBar />
           </div>
           <div className="z-40 w-9/12 relative h-screen flex justify-center items-center ">
-            <div className="absolute top-35 pb-20 w-full">
+            <div className="absolute top-35 pb-20 w-full gap-5 flex flex-col">
               <ChartAreaInteractive chartData={logs} />
+             <ReplyClassification chartData={encodingClassification}/>
+              
             </div>
           </div>
         </div>
