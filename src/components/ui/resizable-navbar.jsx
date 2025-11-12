@@ -183,7 +183,7 @@ export const NavbarLogo = () => {
     >
       <span className=" rounded-sm hover:text-white">
         {/* <MdHeadsetMic size={24} /> */}
-        <img src="/public/images/logo.png" className="h-7" alt="" />
+        <img src="/images/logo.png" className="h-7" alt="" />
       </span>
 
       <h2 className="text-base text-white font-bold">

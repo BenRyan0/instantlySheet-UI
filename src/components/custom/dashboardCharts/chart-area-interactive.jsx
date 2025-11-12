@@ -53,7 +53,7 @@ const chartConfig = {
     color: "var(--chart-4)",
   },
   partnership: {
-    label: "Interested(PARTNERSHIP)",
+    label: "Interested(PARTNERSHIP) ",
     color: "var(--chart-4)",
   },
 };
@@ -95,14 +95,14 @@ export function ChartAreaInteractive({ chartData }) {
           </SelectContent>
         </Select>
       </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+      <CardContent className="">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[350px] w-full overflow-visible "
+          className="aspect-auto h-[300px] w-full overflow-visible "
         >
           <AreaChart
             data={filteredData}
-            margin={{ top: 90, right: 40, left: 10, bottom: 20 }}
+            margin={{ top: 10, right: 40, left: 10, bottom: 20 }}
           >
             <defs>
               <linearGradient id="approved" x1="0" y1="0" x2="0" y2="1">
@@ -211,6 +211,7 @@ export function ChartAreaInteractive({ chartData }) {
             <YAxis hide domain={[0, (dataMax) => dataMax * 1.1]} />
 
             <ChartTooltip
+            className=""
               cursor={false}
               content={
                 <ChartTooltipContent

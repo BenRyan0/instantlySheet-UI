@@ -76,7 +76,7 @@ export function NavBar() {
           <NavbarLogo />
           <div className="">
             <ButtonGroup>
-              <Button variant="outline" className="w-fit">
+              <Button variant="outline" className="w-fit min-w-[110px]">
                 <span className="text-sm font-bold">{userInfo?.username}</span>
                 <FaRegUserCircle size={24} />
               </Button>

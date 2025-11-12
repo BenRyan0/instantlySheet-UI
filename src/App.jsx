@@ -11,6 +11,7 @@ import ProtectUser from "./utils/ProtectUser";
 import ToEncodeList from "./views/ToEncodeList";
 import { useDispatch, useSelector } from "react-redux";
 import { wakeBackend } from "./store/reducers/authReducer";
+import GetLeadDetails from './views/GetLeadDetails';
 
 function App() {
   const dispatch = useDispatch();
@@ -63,6 +64,7 @@ function App() {
           <Route path="/logs" element={<Logs />} />
           <Route path="/dashboard" element={<Charts />} />
           <Route path="/to-encode" element={<ToEncodeList />} />
+          <Route path="/get-details" element={<GetLeadDetails />} />
         </Route>
       </Routes>
     </BrowserRouter>

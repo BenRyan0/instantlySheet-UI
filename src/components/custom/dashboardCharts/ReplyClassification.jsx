@@ -79,14 +79,14 @@ export function ReplyClassification({ chartData }) {
           </SelectContent>
         </Select>
       </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+      <CardContent>
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[350px] w-full overflow-visible "
+          className="aspect-auto h-[300px] w-full overflow-visible "
         >
           <AreaChart
             data={filteredData}
-            margin={{ top: 90, right: 40, left: 10, bottom: 20 }}
+            margin={{ top: 120, right: 40, left: 10, bottom: 20 }}
           >
             <defs>
               <linearGradient id="offers" x1="0" y1="0" x2="0" y2="1">
