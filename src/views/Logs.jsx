@@ -2,17 +2,17 @@ import React, { useEffect } from "react";
 import { NavBar } from "../components/layout/NavBar";
 import { LogsListTable } from "../components/custom/logsPage/LogsList";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllLogs } from "@/store/reducers/logsReducer";
+import { getAllLogsTable } from "@/store/reducers/logsReducer";
 
 
 const Logs = () => {
   const dispatch = useDispatch()
-  const {logs } = useSelector(
+  const {logsTable } = useSelector(
     (state) => state.logs
   );
 
   useEffect(()=>{
-    dispatch(getAllLogs())
+    dispatch(getAllLogsTable())
   },[])
 
 
@@ -23,7 +23,7 @@ const Logs = () => {
       </div>
       <div className="z-40 w-11/12 md:w-9/12 relative h-screen flex justify-center items-center ">
         <div className="absolute top-35 pb-20 w-full">
-          <LogsListTable data={logs} />
+          <LogsListTable data={logsTable} />
         </div>
       </div>
     </div>

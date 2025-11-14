@@ -15,6 +15,19 @@ export const getAllLogs = createAsyncThunk(
     }
   }
 );
+export const getAllLogsTable = createAsyncThunk(
+  "auth/getAllLogsTable",
+  async (_, { fulfillWithValue, rejectWithValue }) => {
+    try {
+      const { data } = await api.get(`/log/get-all-logs-table`);
+      console.log("Logs Table Data:", data)
+
+      return fulfillWithValue(data);
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 
 
@@ -27,6 +40,7 @@ export const logsReducer = createSlice({
     successMessage: "",
     encodingClassification : [],
     logs: [],
+    logsTable: [],
   },
   reducers: {
     messageClear: (state, _) => {
@@ -48,6 +62,21 @@ export const logsReducer = createSlice({
       state.successMessage = payload.payload.message;
       state.logs = payload.payload.logs;
       state.encodingClassification = payload.payload.encodingClassification;
+    });
+
+
+
+    builder.addCase(getAllLogsTable.pending, (state, _) => {
+      state.loader = true;
+    });
+    builder.addCase(getAllLogsTable.rejected, (state, payload) => {
+      state.loader = false;
+      // state.errorMessage = payload.payload.error;
+    });
+    builder.addCase(getAllLogsTable.fulfilled, (state, payload) => {
+      state.loader = false;
+      state.successMessage = payload.payload.message;
+      state.logsTable = payload.payload.logs;
     });
 
   
