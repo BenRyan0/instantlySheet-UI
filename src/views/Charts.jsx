@@ -91,7 +91,7 @@ const Charts = () => {
               </MiniCalendarDays>
               <MiniCalendarNavigation direction="next" />
             </MiniCalendar>
-            <div className="flex justify-center items-center text-center">
+            <div className={`flex justify-center items-center text-center ${loadDelay? "text-gray-500" : loader ? "text-green-500" : ""}`}>
             {(loadDelay || loader) && <Spinner />}
 
               {/* <Spinner /> */}
