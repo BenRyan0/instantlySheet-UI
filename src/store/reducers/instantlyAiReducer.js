@@ -33,6 +33,20 @@ export const getExistingCampaigns = createAsyncThunk(
   }
 );
 
+export const getLeadDetails = createAsyncThunk(
+  "auth/getLeadDetails",
+  async ({ leadEmail }, { fulfillWithValue, rejectWithValue }) => {
+    try {
+      const { data } = await api.post(`/agent/get-lead-details`, { leadEmail });
+      console.log(data)
+      console.log("data getLeadDetails")
+      return fulfillWithValue(data);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const startAgentEncoding = createAsyncThunk(
   "auth/startAgentEncoding",
   async (
@@ -70,16 +84,23 @@ export const instantlyAiReducer = createSlice({
     instantlyloader: false,
     encodingLoader: false,
     isEncodingDone: false,
+    loader : false,
     errorMessage: "",
+    errorMessageDisplay: "",
     successMessage: "",
     existingCampaigns: [],
     totalExistingCampaigns: 0,
     navigateToLogs: false,
+    leadDetails : {},
+    type : ""
   },
   reducers: {
     messageClear: (state, _) => {
       state.errorMessage = "";
       state.successMessage = "";
+    },
+    errorMessageClear: (state, _) => {
+      state.errorMessageDisplay = "";
     },
     navigateToLogsClear: (state, _) => {
       state.navigateToLogs = false;
@@ -132,8 +153,24 @@ export const instantlyAiReducer = createSlice({
       state.encodingLoader = false;
       state.successMessage = payload.payload.message;
     });
+
+
+    builder.addCase(getLeadDetails.pending, (state, _) => {
+      state.loader = true;
+    });
+    builder.addCase(getLeadDetails.rejected, (state, payload) => {
+      state.loader = false;
+      state.errorMessage = payload.payload.error;
+      state.errorMessageDisplay = payload.payload.error;
+    });
+    builder.addCase(getLeadDetails.fulfilled, (state, payload) => {
+      state.loader = false;
+      state.successMessage = payload.payload.message;
+      state.leadDetails = payload.payload.row;
+      state.type = payload.payload.type;
+    });
   },
 });
 
-export const { messageClear, navigateToLogsClear, resetEncodingState } = instantlyAiReducer.actions;
+export const { messageClear, navigateToLogsClear, resetEncodingState,errorMessageClear } = instantlyAiReducer.actions;
 export default instantlyAiReducer.reducer;

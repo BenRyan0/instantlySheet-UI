@@ -17,13 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 
 export const description = "An interactive area chart";
 
@@ -43,8 +37,6 @@ const chartConfig = {
 };
 
 export function ReplyClassification({ chartData }) {
-  const [timeRange, setTimeRange] = React.useState("90d");
-
   // Sort ascending so newest date is at the right
   const filteredData = React.useMemo(() => {
     return [...chartData].sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -52,41 +44,23 @@ export function ReplyClassification({ chartData }) {
 
   return (
     <Card className="pt-0">
-      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+      <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row ">
         <div className="grid flex-1 gap-1">
           <CardTitle>Reply Classifications</CardTitle>
           <CardDescription className={"text-xs"}>
             Email Replies Classification Distribution 
           </CardDescription>
         </div>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger
-            className="hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
-            aria-label="Select a value"
-          >
-            <SelectValue placeholder="Last 3 months" />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl">
-            <SelectItem value="90d" className="rounded-lg">
-              Last 3 months
-            </SelectItem>
-            <SelectItem value="30d" className="rounded-lg">
-              Last 30 days
-            </SelectItem>
-            <SelectItem value="7d" className="rounded-lg">
-              Last 7 days
-            </SelectItem>
-          </SelectContent>
-        </Select>
+  
       </CardHeader>
       <CardContent>
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[300px] w-full overflow-visible "
+          className="aspect-auto h-[200px] w-full overflow-visible "
         >
           <AreaChart
             data={filteredData}
-            margin={{ top: 120, right: 40, left: 10, bottom: 20 }}
+           margin={{ top: 10, right: 40, left: 10, bottom: 20 }}
           >
             <defs>
               <linearGradient id="offers" x1="0" y1="0" x2="0" y2="1">
@@ -144,7 +118,7 @@ export function ReplyClassification({ chartData }) {
                 });
               }}
             />
-            <YAxis hide domain={[0, (dataMax) => dataMax * 1.1]} />
+            <YAxis hide  domain={[0, (dataMax) => dataMax + Math.max(dataMax * 0.1, 20)]} />
 
             <ChartTooltip
               cursor={false}

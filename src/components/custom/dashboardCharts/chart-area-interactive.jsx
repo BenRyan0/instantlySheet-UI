@@ -59,7 +59,6 @@ const chartConfig = {
 };
 
 export function ChartAreaInteractive({ chartData }) {
-  const [timeRange, setTimeRange] = React.useState("90d");
 
   // Sort ascending so newest date is at the right
   const filteredData = React.useMemo(() => {
@@ -67,7 +66,7 @@ export function ChartAreaInteractive({ chartData }) {
   }, [chartData]);
 
   return (
-    <Card className="pt-0">
+    <Card className="pt-0 ">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
           <CardTitle>InstaSheet</CardTitle>
@@ -75,25 +74,7 @@ export function ChartAreaInteractive({ chartData }) {
             Showing leads and encodings over time
           </CardDescription>
         </div>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger
-            className="hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
-            aria-label="Select a value"
-          >
-            <SelectValue placeholder="Last 3 months" />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl">
-            <SelectItem value="90d" className="rounded-lg">
-              Last 3 months
-            </SelectItem>
-            <SelectItem value="30d" className="rounded-lg">
-              Last 30 days
-            </SelectItem>
-            <SelectItem value="7d" className="rounded-lg">
-              Last 7 days
-            </SelectItem>
-          </SelectContent>
-        </Select>
+       
       </CardHeader>
       <CardContent className="">
         <ChartContainer
@@ -208,7 +189,7 @@ export function ChartAreaInteractive({ chartData }) {
                 });
               }}
             />
-            <YAxis hide domain={[0, (dataMax) => dataMax * 1.1]} />
+            <YAxis hide domain={[0, (dataMax) => dataMax + Math.max(dataMax * 0.1, 50)]} />
 
             <ChartTooltip
             className=""

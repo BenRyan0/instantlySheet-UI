@@ -41,6 +41,7 @@ import { TbBrandDatabricks } from "react-icons/tb";
 import { IoMdExit } from "react-icons/io";
 import { VscServerProcess } from "react-icons/vsc";
 import { RiRobot2Fill } from "react-icons/ri";
+import { MdEmail } from "react-icons/md";
 import { RiListCheck2 } from "react-icons/ri";
 import { FaListAlt } from "react-icons/fa";
 
@@ -91,6 +92,11 @@ export function NavBar() {
                     <DropdownMenuItem>
                       <RiRobot2Fill />
                       <a href="/">Agent</a>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <MdEmail />
+                      <a href="/get-details">Get Details</a>
                     </DropdownMenuItem>
                     {/* <DropdownMenuSeparator /> */}
                     {/* <DropdownMenuItem>

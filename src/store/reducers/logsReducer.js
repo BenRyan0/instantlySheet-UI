@@ -3,19 +3,19 @@ import api from "../../api/api";
 
 export const getAllLogs = createAsyncThunk(
   "auth/getAllLogs",
-  async (sheetID, { fulfillWithValue, rejectWithValue }) => {
+  async ({ startDate, endDate }, { fulfillWithValue, rejectWithValue }) => {
     try {
-      const { data } = await api.get(`/log/get-all-logs`);
+      const { data } = await api.get(`/log/get-all-logs`, {
+        params: { startDate, endDate }
+      });
 
-
-      console.log("data")
-      console.log(data)
       return fulfillWithValue(data);
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
+
 
 
 
@@ -44,7 +44,7 @@ export const logsReducer = createSlice({
       state.errorMessage = payload.payload.error;
     });
     builder.addCase(getAllLogs.fulfilled, (state, payload) => {
-      state.loader = true;
+      state.loader = false;
       state.successMessage = payload.payload.message;
       state.logs = payload.payload.logs;
       state.encodingClassification = payload.payload.encodingClassification;
