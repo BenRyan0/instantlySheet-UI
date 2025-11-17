@@ -59,14 +59,13 @@ const chartConfig = {
 };
 
 export function ChartAreaInteractive({ chartData }) {
-
   // Sort ascending so newest date is at the right
   const filteredData = React.useMemo(() => {
     return [...chartData].sort((a, b) => new Date(a.date) - new Date(b.date));
   }, [chartData]);
 
   return (
-    <Card className="pt-0 ">
+    <Card className="pt-0 bg-transparent border-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
           <CardTitle>InstaSheet</CardTitle>
@@ -74,7 +73,6 @@ export function ChartAreaInteractive({ chartData }) {
             Showing leads and encodings over time
           </CardDescription>
         </div>
-       
       </CardHeader>
       <CardContent className="">
         <ChartContainer
@@ -189,10 +187,13 @@ export function ChartAreaInteractive({ chartData }) {
                 });
               }}
             />
-            <YAxis hide domain={[0, (dataMax) => dataMax + Math.max(dataMax * 0.1, 50)]} />
+            <YAxis
+              hide
+              domain={[0, (dataMax) => dataMax + Math.max(dataMax * 0.1, 50)]}
+            />
 
             <ChartTooltip
-            className=""
+              className=""
               cursor={false}
               content={
                 <ChartTooltipContent

@@ -15,6 +15,23 @@ export const getAllLogs = createAsyncThunk(
     }
   }
 );
+export const getDailyLog = createAsyncThunk(
+  "auth/getDailyLog",
+  async ({date }, { fulfillWithValue, rejectWithValue }) => {
+    try {
+      const { data } = await api.get(`/log/get-daily-logs`, {
+        params: { date }
+      });
+
+      console.log("data ------")
+      console.log(data)
+
+      return fulfillWithValue(data);
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 export const getAllLogsTable = createAsyncThunk(
   "auth/getAllLogsTable",
   async (_, { fulfillWithValue, rejectWithValue }) => {
@@ -41,6 +58,8 @@ export const logsReducer = createSlice({
     encodingClassification : [],
     logs: [],
     logsTable: [],
+    dailyLog: [],
+    dailyLogLoader:false
   },
   reducers: {
     messageClear: (state, _) => {
@@ -77,6 +96,20 @@ export const logsReducer = createSlice({
       state.loader = false;
       state.successMessage = payload.payload.message;
       state.logsTable = payload.payload.logs;
+    });
+
+    builder.addCase(getDailyLog.pending, (state, _) => {
+      state.dailyLogLoader = true;
+    });
+    builder.addCase(getDailyLog.rejected, (state, payload) => {
+      state.dailyLogLoader = false;
+      // state.errorMessage = payload.payload.error;
+    });
+    builder.addCase(getDailyLog.fulfilled, (state, payload) => {
+      state.dailyLogLoader = false;
+      state.successMessage = payload.payload.message;
+      state.dailyLog = payload.payload.perDate;
+      state.totalLog = [payload.payload.totalByCategory];
     });
 
   

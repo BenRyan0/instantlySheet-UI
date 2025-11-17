@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 const MiniCalendarContext = createContext(null);
 
-const useMiniCalendar = () => {
+export const useMiniCalendar = () => {
   const context = useContext(MiniCalendarContext);
 
   if (!context) {
@@ -93,7 +93,7 @@ export const MiniCalendar = ({
     <MiniCalendarContext.Provider value={contextValue}>
       <div
         className={cn(
-          "flex items-center gap-2 rounded-lg bg-background p-2",
+          "flex items-center gap-1 rounded-lg bg-background p-1 ",
           className
         )}
         {...props}
@@ -160,8 +160,8 @@ export const MiniCalendarDay = ({ date, className, ...props }) => {
   return (
     <Button
       className={cn(
-        "h-auto min-w-[3rem] flex-col gap-0 p-1 text-xs",
-        isTodayDate && !isSelected && "bg-accent",
+        "h-auto min-w-[2rem] flex-col gap-0 p-1 text-xs ",
+        isTodayDate && !isSelected && "bg-[#18A05E] text-white",
         className
       )}
       onClick={() => onDateSelect(date)}
@@ -178,7 +178,7 @@ export const MiniCalendarDay = ({ date, className, ...props }) => {
       >
         {month}
       </span>
-      <span className="font-semibold text-xs">{day}</span>
+      <span className="font-semibold text-xs ">{day}</span>
     </Button>
   );
 };

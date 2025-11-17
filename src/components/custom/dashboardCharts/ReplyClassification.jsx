@@ -43,7 +43,7 @@ export function ReplyClassification({ chartData }) {
   }, [chartData]);
 
   return (
-    <Card className="pt-0">
+    <Card className="pt-0 bg-transparent border-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row ">
         <div className="grid flex-1 gap-1">
           <CardTitle>Reply Classifications</CardTitle>
