@@ -163,21 +163,29 @@ const Charts = () => {
                 <RadialChartEncodedTotal chartData={totalLog} />
                 //  <Skeleton className="h-[270px] w-[250px]" />
               ) : (
-                <Skeleton className="h-[270px] w-[250px]" />
+                <Skeleton className="h-[270px] w-[250px] bg-gray-400/5" />
               )}
             </div>
           </div>
 
-          {/* <ReplyClassification chartData={encodingClassification} /> */}
           <div className="flex justify-between md:flex-row-reverse gap-3 w-full flex-col items-center">
             <div className="w-full">
               <ReplyClassification chartData={encodingClassification} />
             </div>
 
             <div className="">
-              {Array.isArray(dailyLog) && dailyLog.length > 0 && (
+               {dailyLogLoader ? (
+                <div className="flex items-center justify-center h-64">
+                  {/* <Spinner /> */}
+                  <Skeleton className="h-[270px] w-[250px]" />
+                </div>
+              ) : Array.isArray(dailyLog) && dailyLog.length > 0 ? (
                 <RadialChartEncoded chartData={dailyLog} />
+                //  <Skeleton className="h-[270px] w-[250px]" />
+              ) : (
+                <Skeleton className="h-[270px] w-[250px] bg-gray-400/5" />
               )}
+         
             </div>
           </div>
         </div>
