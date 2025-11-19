@@ -2,25 +2,30 @@ import React, { useEffect, useState, useRef, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavBar } from "../components/layout/NavBar";
 import { InstantlyFilterForm } from "../components/InstantlyFilterForm";
-import { getExistingSheets, messageClear } from "@/store/reducers/sheetReducer";
+import {
+  getExistingSheets,
+  GetSheetData,
+  messageClear,
+} from "@/store/reducers/sheetReducer";
 import {
   getExistingCampaigns,
   navigateToLogsClear,
   resetEncodingState,
 } from "@/store/reducers/instantlyAiReducer";
 import LoaderProgress from "../components/custom/loading/LoaderProgress";
+import { SheetDataChartBar } from "../components/charts/SheetDataChartBar";
 import toast from "react-hot-toast";
 import { socket } from "../utils/utils";
-
-import { toast as showToast } from "sonner"; // <-- aliasing toast to showToast
+import { BsExclamationCircle } from "react-icons/bs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const INACTIVITY_TIMEOUT = 10000; // 10 seconds
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { existingSheets, successMessage, errorMessage } = useSelector(
-    (state) => state.sheet
-  );
+  // const sheetStatsLoader = true
+  const { existingSheets, successMessage, errorMessage, sheetStats,sheetStatsLoader } =
+    useSelector((state) => state.sheet);
   const { instantlyloader, encodingLoader, navigateToLogs, isEncodingDone } =
     useSelector((state) => state.instantlyAi);
 
@@ -28,6 +33,10 @@ const Home = () => {
   const [maxPage, setMaxPage] = useState(0);
   const [maxEmailsCap, setMaxEmailsCap] = useState(0);
   const [showLoader, setShowLoader] = useState(false);
+
+  const [selectedSheet, setSelectedSheet] = useState("");
+  const [selectedSheetPartership, setSelectedSheetPartership] = useState("");
+  const [selectedSheetSBA, setSelectedSheetSBA] = useState("");
 
   const inactivityTimer = useRef(null);
 
@@ -206,13 +215,26 @@ const Home = () => {
     }
   }, [navigateToLogs]);
 
+useEffect(() => {
+  const sheetNames = [selectedSheetSBA, selectedSheetPartership, selectedSheet]
+    .filter(Boolean); // remove null/undefined/empty
+
+  const spreadsheetId = "15ywPV21oF7KKXZUaDaRBH4rAfkyDeyACSA5ExlldTRw";
+
+  if (sheetNames.length === 3) {
+    // Only dispatch when all 3 have valid values
+    dispatch(GetSheetData({ sheetNames, spreadsheetId }));
+  }
+}, [selectedSheetSBA, selectedSheetPartership, selectedSheet, dispatch]);
+
+
   return (
     <div className="relative h-screen w-full flex justify-center items-center">
       <div className="absolute top-0 w-full container mx-auto z-50">
         <NavBar />
       </div>
 
-      <div className="flex flex-col w-full justify-center items-center pt-40 md:pt-10 pb-10 px-4 z-40">
+      <div className="flex flex-col w-full justify-center items-center pt-40 md:pt-10 pb-10 px-4 z-40 relative">
         <InstantlyFilterForm
           className="w-11/12 md:w-[500px]"
           existingSheets={existingSheets}
@@ -220,16 +242,32 @@ const Home = () => {
           encodingLoader={encodingLoader}
           clientId={clientId}
           setProgressList={setProgressList}
+          selectedSheet={selectedSheet}
+          setSelectedSheet={setSelectedSheet}
+          selectedSheetPartership={selectedSheetPartership}
+          setSelectedSheetPartership={setSelectedSheetPartership}
+          selectedSheetSBA={selectedSheetSBA}
+          setSelectedSheetSBA={setSelectedSheetSBA}
         />
-      </div>
 
-      {/* <div className="absolute bg-black/80 inset-0 z-40 flex justify-center items-center">
-          <LoaderProgress
-            progressArray={progressList}
-            maxPage={maxPage}
-            maxEmailsCap={maxEmailsCap}
-          />
-        </div> */}
+        <div className="2xl:absolute 2xl:left-8/12 2xl:top-10 2xl:mt-0 mt-10">
+          {Array.isArray(sheetStats) && sheetStats.length > 0 ? (
+            <SheetDataChartBar chartData={sheetStats} />
+          ) : (
+            <div className="relative">
+              <h2 className={`pl-8 flex text-xs gap-1 text-start bg-gray-500/60 p-3 rounded-xs max-w-[190px] pt-2 opacity-70 ${sheetStatsLoader && ' hidden'}`}>
+                Select 3 sheets to show the number of leads per Sheets.
+              </h2>
+
+              <span className={`absolute top-3 left-2 ${sheetStatsLoader && ' hidden'}`}><BsExclamationCircle /></span>
+              {
+                sheetStatsLoader && <Skeleton className="absolute h-[270px] w-[250px] bg-gray-400/5" />
+
+              }
+            </div>
+          )}
+        </div>
+      </div>
 
       {shouldShowLoader && (
         <div className="absolute inset-0 bg-black/80 z-50 flex justify-center items-center">

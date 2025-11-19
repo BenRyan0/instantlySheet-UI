@@ -17,16 +17,24 @@ import { Spinner } from "@/components/ui/spinner";
 import { PerPageComboboxCharts } from "./../components/utils/PerPageComboboxCharts";
 import { RadialChartEncoded } from "./../components/charts/RadialChartEncoded";
 import { RadialChartEncodedTotal } from "./../components/charts/RadialChartEncodedTotal";
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
+import { socket } from "../utils/utils";
+import toast from "react-hot-toast";
 
 const Charts = () => {
   const dispatch = useDispatch();
-  const { logs, encodingClassification, loader, dailyLog,dailyLogLoader, totalLog } = useSelector(
-    (state) => state.logs
-  );
+  const {
+    logs,
+    encodingClassification,
+    loader,
+    dailyLog,
+    dailyLogLoader,
+    totalLog,
+  } = useSelector((state) => state.logs);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
-
+  console.log(selectedDate);
+  console.log("selectedDate");
   const perPage = [
     {
       value: "7",
@@ -105,8 +113,45 @@ const Charts = () => {
     return () => clearTimeout(timer);
   }, [selectedDate, dispatch]);
 
-  console.log(dailyLog);
-  console.log("dailyLog");
+// 
+useEffect(() => {
+  if (!socket) return;
+
+  const handleEncodingRefresh = () => {
+    toast.success("Lead Processed")
+    if (!startDate || !endDate || !selectedDate) return;
+
+    // ---- format date properly ----
+    const formatLocalDate = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    // ---- re-fetch ALL logs ----
+    dispatch(
+      getAllLogs({
+        startDate: formatLocalDate(startDate),
+        endDate: formatLocalDate(endDate),
+      })
+    );
+
+    // ---- re-fetch DAILY log ----
+    dispatch(
+      getDailyLog({
+        date: selectedDate,
+      })
+    );
+  };
+
+  socket.on("encoding_progress", handleEncodingRefresh);
+
+  return () => {
+    socket.off("encoding_progress", handleEncodingRefresh);
+  };
+}, [socket, startDate, endDate, selectedDate, dispatch]);
+
 
   return (
     <div className="relative h-screen w-full p-0 flex justify-center items-center ">
@@ -161,7 +206,6 @@ const Charts = () => {
                 </div>
               ) : Array.isArray(totalLog) && totalLog.length > 0 ? (
                 <RadialChartEncodedTotal chartData={totalLog} />
-                //  <Skeleton className="h-[270px] w-[250px]" />
               ) : (
                 <Skeleton className="h-[270px] w-[250px] bg-gray-400/5" />
               )}
@@ -174,18 +218,15 @@ const Charts = () => {
             </div>
 
             <div className="">
-               {dailyLogLoader ? (
+              {dailyLogLoader ? (
                 <div className="flex items-center justify-center h-64">
-                  {/* <Spinner /> */}
                   <Skeleton className="h-[270px] w-[250px]" />
                 </div>
               ) : Array.isArray(dailyLog) && dailyLog.length > 0 ? (
                 <RadialChartEncoded chartData={dailyLog} />
-                //  <Skeleton className="h-[270px] w-[250px]" />
               ) : (
                 <Skeleton className="h-[270px] w-[250px] bg-gray-400/5" />
               )}
-         
             </div>
           </div>
         </div>

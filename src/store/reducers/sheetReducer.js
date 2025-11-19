@@ -33,13 +33,39 @@ export const AddNewSheet = createAsyncThunk(
   }
 );
 
+export const GetSheetData = createAsyncThunk(
+  "auth/GetSheetData",
+  async (
+    { sheetNames, spreadsheetId },
+    { fulfillWithValue, rejectWithValue }
+  ) => {
+    try {
+      const { data } = await api.post(
+        "/sheets/get-row-count",
+        {
+          sheetNames, // body
+        },
+        {
+          params: { spreadsheetId }, // query params
+        }
+      );
+      return fulfillWithValue(data);
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+
 export const sheetReducer = createSlice({
   name: "sheet",
   initialState: {
     loader: false,
+    sheetStatsLoader: false,
     errorMessage: "",
     successMessage: "",
     existingSheets: [],
+    sheetStats: []
   },
   reducers: {
     messageClear: (state, _) => {
@@ -68,14 +94,29 @@ export const sheetReducer = createSlice({
     });
     builder.addCase(AddNewSheet.rejected, (state, payload) => {
       state.loader = false;
-      console.log(payload.payload.error)
-      console.log("payload.payload.error-------------------")
+      console.log(payload.payload.error);
+      console.log("payload.payload.error-------------------");
       state.errorMessage = payload.payload.error;
     });
     builder.addCase(AddNewSheet.fulfilled, (state, payload) => {
       state.loader = false;
       state.successMessage = payload.payload.message;
       state.existingSheets.push(payload.payload.sheetName);
+    });
+
+
+    builder.addCase(GetSheetData.pending, (state, _) => {
+      state.sheetStatsLoader = true;
+    });
+    builder.addCase(GetSheetData.rejected, (state, payload) => {
+      state.sheetStatsLoader = false;
+      state.errorMessage = payload.payload.error;
+    });
+    builder.addCase(GetSheetData.fulfilled, (state, payload) => {
+      state.sheetStatsLoader = false;
+      // state.successMessage = payload.payload.message;
+      state.sheetStats = payload.payload;
+      
     });
   },
 });

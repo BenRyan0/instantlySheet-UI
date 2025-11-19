@@ -20,7 +20,7 @@ import { FaChevronRight } from "react-icons/fa";
 import { FaChevronDown } from "react-icons/fa6";
 import { FaChevronUp } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox";
 // import { Tooltip } from "react-tooltip";
 import { motion } from "framer-motion";
 import {
@@ -36,17 +36,21 @@ export function InstantlyFilterForm({
   instantlyloader,
   encodingLoader,
   clientId,
+  selectedSheetSBA,
+  setSelectedSheetSBA,
+  selectedSheetPartership,
+  setSelectedSheetPartership,
+  selectedSheet,
+  setSelectedSheet,
   setProgressList,
   ...props
 }) {
   const [open, setOpen] = useState(false);
   // const [selectedIds, setSelectedIds] = useState([]);
 
-  const [autoAppend, setAutoAppend] = useState(true)
-  const [descriptionExtraction, setDescriptionExtraction] = useState(true)
-  const [selectedSheet, setSelectedSheet] = useState("");
-  const [selectedSheetPartership, setSelectedSheetPartership] = useState("");
-  const [selectedSheetSBA, setSelectedSheetSBA] = useState("");
+  const [autoAppend, setAutoAppend] = useState(true);
+  const [descriptionExtraction, setDescriptionExtraction] = useState(true);
+
   const [loader, setLoader] = useState(true);
   const [openCampaign, setOpenCampaign] = useState(false);
   const [showOpts, setShowOpts] = useState(false);
@@ -77,7 +81,7 @@ export function InstantlyFilterForm({
   const handleSubmit = (e) => {
     e.preventDefault();
     // Validation
-    
+
     if (
       !selectedSheet ||
       typeof selectedSheet !== "string" ||
@@ -102,11 +106,7 @@ export function InstantlyFilterForm({
       toast.error("Please select a Google Sheet destination for SBA.");
       return;
     }
-    if (
-      !clientId ||
-      typeof clientId !== "string" ||
-     clientId.trim() === ""
-    ) {
+    if (!clientId || typeof clientId !== "string" || clientId.trim() === "") {
       toast.error("No Client ID, please reload the webpage");
       return;
     }
@@ -131,12 +131,12 @@ export function InstantlyFilterForm({
       sheetNameForSBA: selectedSheetSBA,
       opts,
       autoAppend: autoAppend,
-      descriptionExtraction : descriptionExtraction,
-      clientId
+      descriptionExtraction: descriptionExtraction,
+      clientId,
     };
-    console.log("---------------  data --------------- ")
-    console.log(data)
-  
+    console.log("---------------  data --------------- ");
+    console.log(data);
+
     dispatch(startAgentEncoding(data));
     // You can replace the above with any further handling (API call, etc)
   };
@@ -189,10 +189,9 @@ export function InstantlyFilterForm({
                         setSelectedSheet={setSelectedSheetPartership}
                       />
                     </div>
-                  
                   </div>
                   <div className="flex justify-between gap-2">
-                     <div className="w-full flex flex-col gap-2">
+                    <div className="w-full flex flex-col gap-2">
                       <Label htmlFor="">Sheet(SBA)</Label>
                       <SheetsComboBox
                         existingSheets={existingSheets}
@@ -203,7 +202,6 @@ export function InstantlyFilterForm({
                     <div className="relative flex items-end">
                       <SheetsDrawerDialog open={open} setOpen={setOpen} />
                     </div>
-                  
                   </div>
                 </div>
                 <Button
@@ -296,7 +294,7 @@ export function InstantlyFilterForm({
                         defaultValue={1}
                       />
                     </motion.div>
-                  
+
                     <motion.div
                       initial={{ opacity: 0, scale: 1, y: -10 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -426,7 +424,6 @@ export function InstantlyFilterForm({
                         defaultValue={300}
                       />
                     </motion.div>
-                    
                   </motion.div>
                 )}
                 <Button
