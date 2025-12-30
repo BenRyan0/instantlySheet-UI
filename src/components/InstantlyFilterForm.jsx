@@ -46,11 +46,8 @@ export function InstantlyFilterForm({
   ...props
 }) {
   const [open, setOpen] = useState(false);
-  // const [selectedIds, setSelectedIds] = useState([]);
-
   const [autoAppend, setAutoAppend] = useState(true);
   const [descriptionExtraction, setDescriptionExtraction] = useState(true);
-
   const [loader, setLoader] = useState(true);
   const [openCampaign, setOpenCampaign] = useState(false);
   const [showOpts, setShowOpts] = useState(false);
@@ -134,8 +131,7 @@ export function InstantlyFilterForm({
       descriptionExtraction: descriptionExtraction,
       clientId,
     };
-    console.log("---------------  data --------------- ");
-    console.log(data);
+
 
     dispatch(startAgentEncoding(data));
     // You can replace the above with any further handling (API call, etc)
@@ -143,10 +139,10 @@ export function InstantlyFilterForm({
 
   return (
     <div
-      className={cn("flex flex-col items-center gap-6", className)}
+      className={cn("flex flex-col items-center gap-6 ", className)}
       {...props}
     >
-      <Card className="w-full">
+      <Card className="w-full bg-gray-700/20 border-2 shadow-lg shadow-green-600/5">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-black">
             <div className="w-full relative flex justify-center items-end">

@@ -60,7 +60,7 @@ export function ReplyClassification({ chartData }) {
         >
           <AreaChart
             data={filteredData}
-           margin={{ top: 10, right: 40, left: 10, bottom: 20 }}
+           margin={{ top: 15, right: 40, left: 10, bottom: 20 }}
           >
             <defs>
               <linearGradient id="offers" x1="0" y1="0" x2="0" y2="1">
@@ -112,8 +112,6 @@ export function ReplyClassification({ chartData }) {
                 return date.toLocaleString("en-US", {
                   month: "short",
                   day: "numeric",
-                  // hour: "2-digit",
-                  // minute: "2-digit",
                   hour12: true,
                 });
               }}

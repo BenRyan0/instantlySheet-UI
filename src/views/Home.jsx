@@ -103,7 +103,7 @@ const Home = () => {
     if (!socket) return;
 
     const handleProgress = (progress) => {
-      console.log("[SOCKET] Progress update:", progress);
+      // console.log("[SOCKET] Progress update:", progress);
 
       setProgressList((prevList) => {
         const isNewRun =
@@ -125,7 +125,7 @@ const Home = () => {
       // Reset inactivity timeout
       if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
       inactivityTimer.current = setTimeout(() => {
-        console.log("No new progress for 10s → hiding loader");
+        // console.log("No new progress for 10s → hiding loader");
         setShowLoader(false);
       }, INACTIVITY_TIMEOUT);
     };
@@ -152,8 +152,6 @@ const Home = () => {
   // -----------------------------
   useEffect(() => {
     if (!isEncodingDone) return;
-
-    console.log("[APP] Encoding finished → resetting progress");
 
     setProgressList([]);
     setShowLoader(false);
@@ -187,7 +185,7 @@ const Home = () => {
     if (!socket) return;
 
     const handleEncodingDone = (payload) => {
-      console.log("[SOCKET] Encoding done:", payload);
+
 
       // Show toast message
       if (payload?.message) {
@@ -236,7 +234,7 @@ useEffect(() => {
 
       <div className="flex flex-col w-full justify-center items-center pt-40 md:pt-10 pb-10 px-4 z-40 relative">
         <InstantlyFilterForm
-          className="w-11/12 md:w-[500px]"
+          className="w-11/12 md:w-[480px]"
           existingSheets={existingSheets}
           instantlyloader={instantlyloader}
           encodingLoader={encodingLoader}

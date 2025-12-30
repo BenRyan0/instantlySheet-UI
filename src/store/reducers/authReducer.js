@@ -128,11 +128,11 @@ export const authReducer = createSlice({
       state.loader = true;
       state.isBackendReady = false;
     });
-    builder.addCase(wakeBackend.fulfilled, (state, action) => {
+    builder.addCase(wakeBackend.fulfilled, (state) => {
       state.loader = false;
       state.isBackendReady = true;
     });
-    builder.addCase(wakeBackend.rejected, (state, action) => {
+    builder.addCase(wakeBackend.rejected, (state) => {
       state.loader = false;
       state.isBackendReady = false;
     });
